@@ -1,0 +1,45 @@
+#!/bin/bash
+# 
+# installer script for kea_config
+#  e.g. Call from PKGBUILD:  
+#   ./do-install ${pkgdir}
+# gene c (2022)
+#
+#dest=${dest%/}
+dest="$1"
+self="kea_config"
+
+info="README.md CHANGELOG.md configs pkg"
+infodir="/usr/share/${self}"
+
+license_src="doc/LICENSE"
+license_dst="LICENSE"
+licensedir="/usr/share/licenses/${self}"
+
+# list apps without the ".py" or leave empty string
+# 
+apps=("kea-config")
+
+# so can make app link in /usr/bin
+sitedir=$(python -c "import site; print(site.getsitepackages()[0])")
+
+if [ ! -d "$dest" ] ; then
+    echo 'Missing destination directory'
+    exit 1
+else
+    # shared
+    /usr/bin/rsync --mkpath -a ${info} ${dest}${infodir}/
+    /usr/bin/rsync --mkpath -a ${license_src} ${dest}/${licensedir}/${license_dst}
+    
+    /usr/bin/python -m installer --destdir="${dest}" dist/*.whl
+
+        # link(s) in /usr/bin/
+    if [ ! -z ${apps[@]} ] ; then
+        /usr/bin/mkdir -p "${dest}/usr/bin"
+        for app in ${apps[@]}
+        do
+            /usr/bin/ln -sf ${sitedir}/${self}/${app}.py ${dest}/usr/bin/${app}
+        done
+    fi
+    exit 0
+fi
