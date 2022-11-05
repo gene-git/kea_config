@@ -104,7 +104,7 @@ See the sample config for details, but we'll summarize the main pieces here:
    And similarly for standby and backup. 
 
  - *server_types*
-   The list of servers being used - should contain at least 'primary'. 
+   The list of servers used - should contain at least 'primary'. 
    e.g. server_types = ['primary',  'standby', 'backup']
 
  - [*global_options*]
@@ -135,6 +135,7 @@ See the sample config for details, but we'll summarize the main pieces here:
        + *routers* - default gateway / route
        + *ntp-servers* (list)
 
+        # host XXX 
         * *[net.reserved.XXX]*
           hardware-address = "mac address" 
 
