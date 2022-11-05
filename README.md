@@ -37,7 +37,7 @@ At the moment kea-config supports kea-dhcp4 and its companion control agent.
 
 Available on
  - [Github source ](https://github.com/gene-git/kea-config)
- - [Archlinux AUR](https://aur.archlinux.org/packages/kea_config)  (Coming soon)     
+ - [Archlinux AUR](https://aur.archlinux.org/packages/kea_config)  
    The same PKGBUILD also in source tree under *pkg* directory.
 
 kea-config is written in python and that is its sole dependency, so python must be installed.
