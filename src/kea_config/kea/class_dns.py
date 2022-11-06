@@ -7,7 +7,7 @@ import dns.resolver
 
 class GcDns:
     """
-    dns class using dns.resolver
+    dns class using dns.resolver - provides caching
     """
     def __init__ (self, dns_server=None, dns_port=53, search_domains=None):
         """

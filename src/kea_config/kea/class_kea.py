@@ -29,18 +29,6 @@ class KeaServer:
     def __getattr__(self, name):
         return None
 
-#class KeaReserved:
-#    """ Base Network Reserved Class """
-#    def __init__(self, kea_conf, hostname, host):
-#        self.name = hostname
-#        self.kea_conf = kea_conf
-#        for (key, val) in host.items():
-#            setattr(self, key, val)
-#
-#    def __getattr__(self, name):
-#        return None
-#-----------------------------------------------------
-
 def _check_server_types(kea_conf):
     """
     check config has valid server_types list
@@ -166,7 +154,7 @@ class KeaConfig:
         self.now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.config_file = 'kea-dhcp4-setup.conf'
 
-        arp = argparse.ArgumentParser(description='gen_kea_config')
+        arp = argparse.ArgumentParser(description='kea_config')
 
         arp.add_argument('-c',  '--config',
                 default = self.config_file,
@@ -187,12 +175,6 @@ class KeaConfig:
             print(f'Missing config file : {confile}')
             self.okay = False
             return
-
-        # if have any other command line options overide now
-        # parser returns False for bools which were not set; only take True bools
-        #for (opt,val) in cl_opts.items():
-        #    if val and val != 'config':
-        #        setattr(self, opt, val)
 
         #
         # Create our attribute variables
@@ -217,30 +199,9 @@ class KeaConfig:
             globals()[this_name] = type(this_name, (KeaServer,), xtra_attributes)
 
             this_class = globals()[this_name]
-            #this_attributes = getattr(self, server[name])                   # config dictionary
             this_attributes = server[name]                   # config dictionary
             this_instance = this_class(self, name, this_attributes) # create instance
             setattr(self, name, this_instance)                      # save to self.name
-
-        #
-        #   class for network host reservation (KeaRes<Hostname>)
-        #   dash is legal in hostname so needs special handling
-        #
-        #self.reserved_list = _reserved_hosts(self)
-        #for host in self.reserved_list:
-        #    host_no_dash = host
-        #    if "-" in host:
-        #        host_no_dash = host.replace('-', '_')
-
-        #    this_class_host = 'KeaRes' + host_no_dash.capitalize()
-        #    xtra_attributes = {}
-
-        #    globals()[this_class_host] = type(this_class_host, (KeaReserved,), xtra_attributes)
-
-        #    this_class = globals()[this_class_host]
-        #    this_attributes = getattr(self, host)                   # config dictionary
-        #    this_instance = this_class(self, host, this_attributes) # create instance
-        #    setattr(self, host_no_dash, this_instance)                      # save to self.name
 
         # output file set up
         if not _outputs_init(self):

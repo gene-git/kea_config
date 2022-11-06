@@ -5,7 +5,6 @@
 def list_to_strings (vec):
     """
     list_to_strings()
-
     Kea needs some things as list inside quotes: "aaa, nnn, ccc, ..."
     convert python list to this format
     """

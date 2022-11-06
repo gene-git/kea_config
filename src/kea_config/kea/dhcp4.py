@@ -128,10 +128,6 @@ def dhcp4_write_peers (kea_config, fobj):
         return
 
     num_peers = len(kea_config.server_types)
-    #for stype  in kea_config.server_types:
-    #    server = getattr(kea_config, stype)
-    #    if server:
-    #        num_peers = num_peers + 1
 
     fobj.write('\n\t\t\t\t"peers": [')
     count = 1
@@ -151,8 +147,6 @@ def dhcp4_write_peers (kea_config, fobj):
 
         auth_user = server.auth_user
         auth_pass = server.auth_password
-        #auth_user = 'kea-ctrl'
-        #auth_pass = 'SomeRandomCrap'
 
         fobj.write('\n\t\t\t\t{')
         fobj.write(f'\n\t\t\t\t\t"name": "{name}",')
