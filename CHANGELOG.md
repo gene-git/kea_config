@@ -1,5 +1,9 @@
 # Changelog
 
+## [4.3.2] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-11-06
+ - remove un-needed comments  
+ - update CHANGELOG.md  
+
 ## [4.3.1] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-11-05
  - small tweak to readme and sample config  
  - tweak readme  
