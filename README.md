@@ -45,7 +45,7 @@ kea-config is written in python and that is its sole dependency, so python must 
 You can run it out of the cloned repo (src/kea_config/kea-config.py) or install manually
 
         rm -f dist/*
-        python python -m build --wheel --no-isolation
+        /usr/bin/poetry build --format wheel
         ./scripts/do-install /
 
 which will install */usr/bin/kea-config* and sample config in */usr/share/kea_config*

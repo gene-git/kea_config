@@ -31,10 +31,15 @@ else
     /usr/bin/rsync --mkpath -a ${info} ${dest}${infodir}/
     /usr/bin/rsync --mkpath -a ${license_src} ${dest}/${licensedir}/${license_dst}
     
-    /usr/bin/python -m installer --destdir="${dest}" dist/*.whl
+    #
+    # Ensure no pip config is used.
+    #
+    export PIP_CONFIG_FILE=/dev/null
+    pipopts="--root-user-action=ignore --isolated --ignore-installed --no-deps"
+    /usr/bin/pip install --root="${dest}" $pipopts dist/*.whl
 
-        # link(s) in /usr/bin/
-    if [ ! -z ${apps[@]} ] ; then
+    # link(s) in /usr/bin/
+    if [ -v apps ] ; then
         /usr/bin/mkdir -p "${dest}/usr/bin"
         for app in ${apps[@]}
         do
