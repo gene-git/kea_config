@@ -1,5 +1,11 @@
 # Changelog
 
+## [4.4.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-12-14
+ - Use poetry to build wheel in PKGBUILD  
+   Installer now uses pip install  
+   Update readme build to use poetry  
+ - update CHANGELOG.md  
+
 ## [4.3.2] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-11-06
  - remove un-needed comments  
  - update CHANGELOG.md  
