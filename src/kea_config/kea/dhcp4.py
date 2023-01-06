@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2022,2023 Gene C
 """
  Support for dhcp4 part of kea config generator
  Write out the kea configs

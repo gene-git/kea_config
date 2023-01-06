@@ -158,3 +158,10 @@ to work on this at the moment.
 
 While kea-config is distro agnostic, I do provide an Archlinux package available on the AUR.
 
+## License
+
+Created by Gene C. and licensed under the terms of the MIT license.
+
+ - SPDX-License-Identifier: MIT
+ - Copyright (c) 2022-2023 Gene C
+

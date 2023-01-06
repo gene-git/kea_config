@@ -1,7 +1,7 @@
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2022,2023 Gene C
 """
-
  kea config tool
-
  Tools to generate kea-dhcp4 server configs
  Driven by toml config file
  gc    2022-03-03

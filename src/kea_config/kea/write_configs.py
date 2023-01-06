@@ -1,6 +1,7 @@
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2022,2023 Gene C
 """
  Write out kea dhcp4 configs
-
 """
 from .tools import open_file
 from .dhcp4 import dhcp4_write_top_section
