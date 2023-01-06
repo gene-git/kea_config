@@ -1,5 +1,9 @@
 # Changelog
 
+## [4.4.1] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2023-01-06
+ - Add SPDX licensing lines  
+ - update CHANGELOG.md  
+
 ## [4.4.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-12-14
  - Use poetry to build wheel in PKGBUILD  
    Installer now uses pip install  
