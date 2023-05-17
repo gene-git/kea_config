@@ -1,5 +1,9 @@
 # Changelog
 
+## [4.4.2] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2023-05-17
+ - Simplify Arch PKGBUILD and more closely follow arch guidelines  
+ - update CHANGELOG.md  
+
 ## [4.4.1] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2023-01-06
  - Add SPDX licensing lines  
  - update CHANGELOG.md  
