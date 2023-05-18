@@ -1,5 +1,9 @@
 # Changelog
 
+## [4.4.3] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2023-05-18
+ - install: switch from pip to python installer package. This adds optimized bytecode  
+ - update CHANGELOG.md  
+
 ## [4.4.2] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2023-05-17
  - Simplify Arch PKGBUILD and more closely follow arch guidelines  
  - update CHANGELOG.md  
