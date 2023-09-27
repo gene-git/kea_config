@@ -251,8 +251,8 @@ Created by Gene C. and licensed under the terms of the MIT license.
  * SPDX-License-Identifier: MIT
  * Copyright (c) 2022-2023 Gene C
 
-.. _Github: https://github.com/gene-git/wg-client
-.. _Archlinux AUR: https://aur.archlinux.org/packages/wg-client
+.. _Github: https://github.com/gene-git/kea_config
+.. _Archlinux AUR: https://aur.archlinux.org/packages/kea_config
 
 .. [1] https://github.com/google/googletest
 .. [2] https://abseil.io/about/philosophy#upgrade-support
