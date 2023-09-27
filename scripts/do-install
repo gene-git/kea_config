@@ -11,11 +11,10 @@
 dest="$1"
 self="kea_config"
 
-info="README.md CHANGELOG.md configs pkg"
+info="README.rst Docs configs pkg"
 infodir="/usr/share/${self}"
 
-license_src="doc/LICENSE"
-license_dst="LICENSE"
+license_src="Docs/License.rst"
 licensedir="/usr/share/licenses/${self}"
 
 # list apps without the ".py" or leave empty string
@@ -31,7 +30,7 @@ if [ ! -d "$dest" ] ; then
 else
     # shared
     /usr/bin/rsync --mkpath -a ${info} ${dest}${infodir}/
-    /usr/bin/rsync --mkpath -a ${license_src} ${dest}/${licensedir}/${license_dst}
+    /usr/bin/rsync --mkpath -a ${license_src} ${dest}/${licensedir}/
     
     /usr/bin/python -m installer --destdir="$dest" dist/*.whl
 

@@ -1,0 +1,16 @@
+# 
+# requirements.txt
+
+# Run time
+python >= 3.9
+
+# package building/installing
+git
+wheel
+build
+installer
+poetry
+rsync
+
+
+

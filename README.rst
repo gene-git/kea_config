@@ -1,7 +1,13 @@
+.. SPDX-License-Identifier: MIT
 
-# OVERVIEW of kea-config
+##########
+kea-config
+##########
 
-## What is kea?
+Overview
+========
+
+**What is kea?**
 
 kea is a modern dhcp server from ISC (<https://www.isc.org/kea>) which supercedes its older
 dhcp software. 
@@ -14,7 +20,7 @@ terribly human friendly.
 Most notably each server requires it's own separate config and keeping them all 
 synchronized can be a bit of a chore and which naturally is prone to human error.
 
-## What is kea-config
+**What is kea-config?**
 
 kea-config provides a tool which takes a single configuration file as its input and 
 it then generates the native kea configuration files needed from that single source of truth. 
@@ -26,43 +32,53 @@ the reservation is specified using hostname only not IP as expected by kea.
 
 At the moment kea-config supports kea-dhcp4 and its companion control agent.
 
-## Contents
+Contents
 
     1. Installation 
     2. Using kea-config
     3. Summary of config variables
     4. Discussion and Next Steps
 
-### 1. Installation  
+Installation  
+============
 
 Available on
- - [Github source ](https://github.com/gene-git/kea-config)
- - [Archlinux AUR](https://aur.archlinux.org/packages/kea_config)  
-   The same PKGBUILD also in source tree under *pkg* directory.
+ * `Github`_
+ * `Archlinux AUR`_
 
-kea-config is written in python and that is its sole dependency, so python must be installed.
+On Arch you can build using the PKGBUILD provided in packaging directory or from the AUR package.
 
-You can run it out of the cloned repo (src/kea_config/kea-config.py) or install manually
+ .. code-block:: bash
+    :caption: Manual Install
 
         rm -f dist/*
         /usr/bin/python -m build --wheel --no-isolation
-        ./scripts/do-install /
+        root_dest="/"
+        ./scripts/do-install $root_dest
 
-which will install */usr/bin/kea-config* and sample config in */usr/share/kea_config*
+When running as non-root then set root\_dest a user writable directory
+This will install the executable */usr/bin/kea-config* along with a
+sample config in */usr/share/kea_config*
 
-or on Arch just build and install the package from pkg/PKGBUILD or AUR.
+kea_config application
+======================
 
-# 2. Using kea-config 
+kea-config is written in python and that is its sole dependency, hence python must be installed.
+
+You can install it or run it out of the cloned repo (src/kea_config/kea-config.py)
+
+Using kea-config 
+----------------
 
 Once installed, to use it, copy the sample config file in the *configs* dir, modify 
-for your own setup and simply run it:
+for your own setup and simply run it::
 
     kea-config -c <your.conf>
 
 This will generate pairs of files, one kea config and one control agent config for each
 of primary, standby and backup - or whatever subset you used in the conf file. 
     
-e.g. it will create kea configs in the <conf_dir> which is defined config being used.
+e.g. it will create kea configs in the <conf_dir> which is defined config being used::
 
         kea-ctrl-agent-primary.conf
         kea-dhcp4-primary.conf
@@ -73,41 +89,51 @@ on the corresponding server. e.g The 2 primary files are used on the kea-dhcp4 p
 One simple way to manage these is to copy the entire <conf_dir> to each kea server /etc/kea
 then use sym links for kea config - linking to appropriate primary, standby or backup.
 
-e.g. /etc/kea on primary would have :
+e.g. /etc/kea on primary would have ::
 
         kea-dhcp4.conf -> <conf_dir>/kea-dhcp4-primary.conf
         kea-ctrl-agent.conf -> <conf_dir>/kea-ctrl-agent-primary.conf
 
 
-# 3.  Summary of config variable:
+Summary of config variable
+--------------------------
 
-Comments are anything starting with '#' and are ignored.
-The conf file in standard TOML format and as usual sections are denoted in square brackets.
-e.g.
+Comments begin with '#' and are ignored.
+The conf file in standard TOML format and as usual sections are 
+denoted by square brackets.
+e.g.::
 
         some_variable = 'xxx'
         [section_1]
             a_variable = 'hi'
             a_list = ['1', 'two', 'three']
 
-See the sample config for details, but we'll summarize the main pieces here:
+See the sample config for additional details. We summarize the main pieces here:
 
- - *title*
+ * *title*
+
    For human use only - not used by kea-config.
 
- - *conf_dir*
+ * *conf_dir*
+
    Directory where generated kea configs reside. What I do is rsync this directory to
    /etc/kea/ on each kea server. Each server then has a soft link to its own specific config.
    For example on my primary server I have
-     - ln -s <conf_dir>/kea-ctrl-agent-primary.conf kea-ctrl-agent.conf
-     -  ln -s <conf_dir>//kea-dhcp4-primary.conf kea-dhcp4.conf
-   And similarly for standby and backup. 
 
- - *server_types*
+.. code:: bash
+
+     ln -s <conf_dir>/kea-ctrl-agent-primary.conf kea-ctrl-agent.conf
+     ln -s <conf_dir>//kea-dhcp4-primary.conf kea-dhcp4.conf
+
+And similarly for standby and backup. 
+
+ * *server_types*
+
    The list of servers used - should contain at least 'primary'. 
    e.g. server_types = ['primary',  'standby', 'backup']
 
- - [*global_options*]
+ * [*global_options*]
+
    This section has some common dhcp information shared with dhcp clients:
 
         * domain-name-servers - list of DNS server IPs 
@@ -115,35 +141,60 @@ See the sample config for details, but we'll summarize the main pieces here:
         * domain-search - list of (sub)domains to search (if any)
         * ntp-servers - list of local ntp server IPs (if any)
 
- - *[server.primary]* 
+ * *[server.primary]* 
+
     Provides the information needed for the primary server
     interface, hostname, port, auth_user and auth_password
 
- - *[server.standby]* *[server.backup]*
+ * *[server.standby]* *[server.backup]*
+
    Same format as primary server section. Optional and only used if turned on in *server_types* list.
 
- - *[net]*
+ * *[net]*
+
    This section describes the standard dhcp information including host IP reservations. 
 
-     + dns_net  - internal domain, used to lookup IP for host reservations.
-     + pools - list of IP ranges to use
-     + subnet - what it sounds like
-     + max-valid-lifetime - as usual in seconds 
-     + *[net.option-data]*
-       sub section with:
-       + *broadcast-address*
-       + *routers* - default gateway / route
-       + *ntp-servers* (list)
+    * dns_net
 
-        # host XXX 
+      internal domain, used to lookup IP for host reservations.
+
+    * pools 
+
+      list of IP ranges to use
+
+    * subnet 
+      
+      what it sounds like
+
+    * max-valid-lifetime 
+
+      as usual in seconds 
+
+    * *[net.option-data]*
+
+      sub section with:
+
+      - *broadcast-address*
+
+      - *routers*
+        
+        default gateway / route
+
+      - *ntp-servers*
+
+        A list
+
         * *[net.reserved.XXX]*
+
+          host XXX 
           hardware-address = "mac address" 
 
-Will reserve the IP for XXX based on dns lookup of XXX.
-Have as many of these as needed.
+          Will reserve the IP for XXX based on dns lookup of XXX.
+          Have as many of these as needed.
 
 
-# 4. Discussion and Next Steps
+Discussion and Next Steps
+=========================
 
 This version is for kea-dhcp4 (IPv4).
 
@@ -158,10 +209,51 @@ to work on this at the moment.
 
 While kea-config is distro agnostic, I do provide an Archlinux package available on the AUR.
 
-## License
+########
+Appendix
+########
+
+Dependencies
+============
+
+* Run time
+
+ * python       
+
+* Building Package:
+
+  * git
+  * poetry          (aka python-poetry)
+  * wheel           (aka python-wheel)
+  * build           (aka python-build)
+  * installer       (aka python-installer)
+  * rsync
+
+* Optional for building docs:
+
+  * sphinx
+  * texlive-latexextra  (archlinux packaguing of texlive tools)
+
+Philosophy
+==========
+
+We follow the *live at head commit* philosophy. This means we recommend using the
+latest commit on git master branch. We also provide git tags.
+
+This approach is also taken by Google [1]_ [2]_.
+
+
+License
+=======
 
 Created by Gene C. and licensed under the terms of the MIT license.
 
- - SPDX-License-Identifier: MIT
- - Copyright (c) 2022-2023 Gene C
+ * SPDX-License-Identifier: MIT
+ * Copyright (c) 2022-2023 Gene C
+
+.. _Github: https://github.com/gene-git/wg-client
+.. _Archlinux AUR: https://aur.archlinux.org/packages/wg-client
+
+.. [1] https://github.com/google/googletest
+.. [2] https://abseil.io/about/philosophy#upgrade-support
 
