@@ -1,16 +1,26 @@
-[tool.poetry]
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
 name = "kea_config"
-version = "4.5.1"
-description = "Manage kea dhcp from simple conf file"
-authors = ["Gene C"]
+dynamic = ["version"]
+description = "Manage kea dhcp from simple conf file (gc)"
+authors = [{ name = "Gene C", email = "arch@sapience.com" }]
 license = "MIT"
 readme = "README.rst"
+keywords = []
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.11",
+]
+dependencies = []
 
-[tool.poetry.dependencies]
-python = "^3.9"
+[tool.hatch.version]
+path = "src/kea_config/__about__.py"
 
-[tool.poetry.dev-dependencies]
+[[tool.hatch.envs.all.matrix]]
+python = ["3.10", "3.11", "3.12"]
 
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+

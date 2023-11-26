@@ -9,7 +9,7 @@ git
 wheel
 build
 installer
-poetry
+hatch
 rsync
 
 
