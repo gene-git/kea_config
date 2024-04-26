@@ -12,20 +12,23 @@ def write_ctrl_agent (kea_config, fps):
     """
     # pylint: disable=R0915
     now = kea_config.now
+    port = kea_config.ctrl_agent_port
 
     for stype in kea_config.server_types:
         fobj = fps[stype]
         if fobj:
             server = getattr(kea_config, stype)
 
-            #name = f'kea-{stype}'
+            #
+            # if no ctrl agent port in config, then port = 1 + dhcp server port
+            #
             hostname = server.hostname
             ip = server.ip
-            port = server.port
-            #url = f'http://{ip}:{port}'
+            if not port:
+                port = str( int(server.port) + 1)
+
             auth_user = server.auth_user
             auth_pass = server.auth_password
-            #role = stype
 
             fobj.write( f'// Kea Control Agent : {hostname}\n')
             fobj.write( f'//    Server tyoe : {stype}\n')
