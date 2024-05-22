@@ -1,6 +1,13 @@
 Changelog
 =========
 
+**[4.8.3] ----- 2024-05-22** ::
+
+	    Update version file
+	    Add comment to readme about manually removing the deprecated option
+	    update Docs/Changelog.rst
+
+
 **[4.8.2] ----- 2024-05-22** ::
 
 	    Update version file
