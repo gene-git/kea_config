@@ -305,7 +305,8 @@ def dhcp4_write_reserved (kea_config, fps):
             fobj.write('\t\t//\n')
 
             fobj.write('\n')
-            fobj.write('\t\t"reservation-mode": "out-of-pool",\n')
+            # 2024-05-22 reservation-mode has been deprecated
+            # fobj.write('\t\t"reservation-mode": "out-of-pool",\n')
             fobj.write('\t\t"reservations": [\n')
 
             first = True
