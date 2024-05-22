@@ -7,7 +7,7 @@ kea-config
 Breaking Change
 ===============
 
-kea has deprecated the option *reservation-mode" for versions of kea newer than 2.4.
+kea has deprecated the option *reservation-mode* for versions of kea newer than 2.4.
 These new versions will error if this option is used.
 
 We have now removed this option from *kea-config* generated output. 

@@ -1,6 +1,15 @@
 Changelog
 =========
 
+**[4.8.2] ----- 2024-05-22** ::
+
+	    Update version file
+	    update Docs/Changelog.rst
+	    Update version file
+	    typo in readme
+	    update Docs/Changelog.rst
+
+
 **[4.8.1] ----- 2024-05-22** ::
 
 	    Update version file

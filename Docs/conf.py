@@ -9,7 +9,7 @@
 project = "kea_config"
 copyright = '2023, Gene C'
 author = 'Gene C'
-release = '4.8.1'
+release = '4.8.2'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
