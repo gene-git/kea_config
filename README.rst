@@ -13,7 +13,7 @@ These new versions will error if this option is used.
 We have now removed this option from *kea-config* generated output. 
 
 Please re-run *kea-config* to generate fresh configs. These new configs are compatible 
-with versions of kea newer than 2.4.
+with version of kea newer than 2.4 as well as version 2.4.
 
 Existing file */etc/kea/kea-dhcp4.conf* can also be edited to remove the line with the
 deprecated option.
