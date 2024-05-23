@@ -4,8 +4,28 @@
 kea-config
 ##########
 
+New
+===
+
+ * Add output option "calculate-tee-times" : true (replaces explicit renew-timer, rebind-timer)
+
+ * Add output option: "offer-lifetime": 60
+
+ * Add global input options: "min-valid-lifetime", "valid-lifetime", "max-valid-lifetime"
+
+   These can be overriden at the subnet level
+
+ * If some lifetimes are set, missing ones are imputed using:
+
+   min-valid-lifetime = valid-lifetime / 2
+
+   max-valid-lifetime = valid-lifetime * 2
+
+ * reservations : use FQDN for hostname. Hostname must be requested by client for kea to send it.
+
+
 Breaking Change
-===============
+---------------
 
 kea has deprecated the option *reservation-mode* for versions of kea newer than 2.4.
 These new versions will error if this option is used.

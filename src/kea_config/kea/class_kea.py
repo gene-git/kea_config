@@ -119,6 +119,7 @@ def _config_networks(kea_conf):
                 ip = ipin
             #reserved[host]['ip-address'] = ip
             reserved[host]['ip'] = ip
+            reserved[host]['fqdn'] = f'{fqdn}.'
 
     return okay
 
@@ -185,6 +186,11 @@ class KeaConfig:
             return
 
         #
+        # valid_lifetimes
+        #
+        _valid_lifetimes(self)
+
+        #
         # Dynamic Classes
         #
 
@@ -223,7 +229,7 @@ class KeaConfig:
         Prep the config information so have info needed to wtite the kea config files
         """
         okay = _config_servers(self)
-        okay |= _config_networks(self)
+        okay &= _config_networks(self)
         return okay
 
     def save_configs(self):
@@ -231,3 +237,69 @@ class KeaConfig:
         Write out the kea config files for dhcp4
         """
         write_configs(self)
+
+def _lifetimes(lifetime, min_lifetime, max_lifetime):
+    """
+    Check and infer lifetime
+    returns :
+        (lifetime, min_lifetime, max_lifetime) as integers if any are set
+        (None, None, None) if none are set
+    """
+    if not (lifetime or min_lifetime or max_lifetime):
+        return (None, None, None)
+
+    if not lifetime:
+        if max_lifetime:
+            lifetime = int(int(max_lifetime) / 2)
+        else:
+            lifetime = int(int(min_lifetime) * 2)
+
+    if not min_lifetime:
+        min_lifetime = int(int(lifetime) / 2)
+
+    if not max_lifetime:
+        max_lifetime = int(int(lifetime) * 2)
+
+    return (lifetime, min_lifetime, max_lifetime)
+
+def _valid_lifetimes(conf):
+    """
+    Check and infer lifetime
+    """
+    #
+    # Global
+    #
+    has_global = False
+    has_net = False
+    lifetime = conf.global_options.get('valid-lifetime')
+    min_lifetime = conf.global_options.get('min-valid-lifetime')
+    max_lifetime = conf.global_options.get('max-valid-lifetime')
+
+    (lifetime, min_lifetime, max_lifetime) = _lifetimes(lifetime, min_lifetime, max_lifetime)
+    if lifetime:
+        has_global = True
+        conf.global_options['valid-lifetime'] = lifetime
+        conf.global_options['min-valid-lifetime'] = min_lifetime
+        conf.global_options['max-valid-lifetime'] = max_lifetime
+
+    #
+    # net
+    #
+    net = conf.net
+    lifetime = net.get('valid-lifetime')
+    min_lifetime = net.get('min-valid-lifetime')
+    max_lifetime = net.get('max-valid-lifetime')
+    (lifetime, min_lifetime, max_lifetime) = _lifetimes(lifetime, min_lifetime, max_lifetime)
+    if lifetime:
+        has_net = True
+        net['valid-lifetime'] = lifetime
+        net['min-valid-lifetime'] = min_lifetime
+        net['max-valid-lifetime'] = max_lifetime
+
+    #
+    # Set default if not specified
+    #
+    if not (has_global or has_net):
+        conf.global_options['valid-lifetime'] = 14400
+        conf.global_options['min-valid-lifetime'] = 28800
+        conf.global_options['max-valid-lifetime'] = 57600

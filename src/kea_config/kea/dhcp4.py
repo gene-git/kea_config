@@ -5,7 +5,7 @@
  Write out the kea configs
    Output divided into sections
 """
-# pylint: disable=C0103
+# pylint: disable=too-many-statements
 from .tools import list_to_strings
 
 def dhcp4_write_global_options (kea_config, fps):
@@ -71,6 +71,10 @@ def dhcp4_write_top_section (kea_config, fps):
 
     now = kea_config.now
 
+    lifetime = kea_config.global_options.get('valid-lifetime')
+    min_lifetime = kea_config.global_options.get('min-valid-lifetime')
+    max_lifetime = kea_config.global_options.get('max-valid-lifetime')
+
     for stype in kea_config.server_types :
         fobj = fps[stype]
         if fobj:
@@ -117,9 +121,15 @@ def dhcp4_write_top_section (kea_config, fps):
             fobj.write('\t\t"unwarned-reclaim-cycles": 5\n')
             fobj.write('\t},\n')
 
-            fobj.write('\t"renew-timer": 900,\n')
-            fobj.write('\t"rebind-timer": 1800,\n')
-            fobj.write('\t"valid-lifetime": 14400,\n')
+            fobj.write('\t"calculate-tee-times": true,\n')
+            fobj.write('\t"offer-lifetime": 60,\n')
+
+            if min_lifetime:
+                fobj.write(f'\t"min-valid-lifetime": {min_lifetime},\n')
+            if lifetime:
+                fobj.write(f'\t"valid-lifetime": {lifetime},\n')
+            if lifetime:
+                fobj.write(f'\t"max-valid-lifetime": {max_lifetime},\n')
 
 def dhcp4_write_peers (kea_config, fobj):
     """
@@ -224,7 +234,10 @@ def dhcp4_write_subnets (kea_config, fps):
 
     pools = net['pools']
     subnet = net['subnet']
-    max_lifetime = net['max-valid-lifetime']
+
+    lifetime = net.get('valid-lifetime')
+    min_lifetime = net.get('min-valid-lifetime')
+    max_lifetime = net.get('max-valid-lifetime')
 
     option_data = net.get('option-data')
     if option_data:
@@ -260,7 +273,14 @@ def dhcp4_write_subnets (kea_config, fps):
             fobj.write(f'\t\t"id": {subnet_id},\n')
             fobj.write(f'\t\t"subnet": "{subnet}",\n')
             fobj.write(f'\t\t"pools": [{pool_info}],\n')
-            fobj.write(f'\t\t"max-valid-lifetime": {max_lifetime},\n')
+
+            if min_lifetime:
+                fobj.write(f'\t\t"min-valid-lifetime": {min_lifetime},\n')
+            if lifetime:
+                fobj.write(f'\t\t"valid-lifetime": {lifetime},\n')
+            if max_lifetime:
+                fobj.write(f'\t\t"max-valid-lifetime": {max_lifetime},\n')
+
             fobj.write('\t\t"authoritative": true,\n')
             fobj.write(f'\t\t"interface": "{iface}",\n')
 
@@ -313,12 +333,16 @@ def dhcp4_write_reserved (kea_config, fps):
             for host in reserved:
                 ip = reserved[host]['ip']
                 mac = reserved[host]['hw-address']
+                fqdn = reserved[host].get('fqdn')
                 if not first:
                     fobj.write(',\n')
                 else:
                     first = False
                 fobj.write('\t\t{\n')
-                fobj.write(f'\t\t\t"hostname": "{host}",\n')
+                if fqdn:
+                    fobj.write(f'\t\t\t"hostname": "{fqdn}",\n')
+                else:
+                    fobj.write(f'\t\t\t"hostname": "{host}",\n')
                 fobj.write(f'\t\t\t"hw-address": "{mac}",\n')
                 fobj.write(f'\t\t\t"ip-address": "{ip}"\n')
                 fobj.write('\t\t}')
