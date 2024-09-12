@@ -26,7 +26,7 @@ class GcDns:
         if self.search_domains:
             self.resolver.search = [dns.name.from_text(dom) for dom in self.search_domains]
             self.resolver.use_search_by_default = True
-        self.resolver.cache = dns.resolver.Cache()
+        self.resolver.cache = dns.resolver.LRUCache()
 
     def query (self, host_or_ip, qtype='A'):
         """
