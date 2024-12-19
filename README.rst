@@ -283,7 +283,7 @@ License
 Created by Gene C. and licensed under the terms of the MIT license.
 
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2022-2023 Gene C
+ * Copyright (c) 2022-present Gene C
 
 .. _Github: https://github.com/gene-git/kea_config
 .. _Archlinux AUR: https://aur.archlinux.org/packages/kea_config

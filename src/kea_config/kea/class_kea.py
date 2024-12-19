@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-# Copyright (c) 2022,2023 Gene C
+# Copyright (c) 2022-present Gene C
 """
  kea config tool
  Tools to generate kea-dhcp4 server configs
@@ -9,10 +9,10 @@
 import os
 import datetime
 import argparse
-import toml
 
 from .class_dns import GcDns
 from .write_configs import write_configs
+from .toml import read_toml_file
 
 # pylint: disable=R0903,C0103
 #-----------------------------------------------------
@@ -171,7 +171,7 @@ class KeaConfig:
 
         # load toml config
         confile = cl_opts['config']
-        config = toml.load(confile)
+        config = read_toml_file(confile)
         if not config:
             print(f'Missing config file : {confile}')
             self.okay = False

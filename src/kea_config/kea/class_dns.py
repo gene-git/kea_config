@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-# Copyright (c) 2022,2023 Gene C
+# Copyright (c) 2022-present Gene C
 """
  class_dns.py
  DNS address lookup - caches resolver for faster multiple lookups
