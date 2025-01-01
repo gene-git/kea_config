@@ -1,8 +1,12 @@
 Changelog
 =========
 
-**[HEAD] ----- 2024-12-19** ::
+**[4.13.0] ----- 2024-12-31** ::
 
+	    Git tags are now signed.
+	    Update SPDX tags
+	    Add git signing key to Arch Package
+	    Bump python version
 	    update Docs/Changelog.rst Docs/kea_config.pdf
 
 
