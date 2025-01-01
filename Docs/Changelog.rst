@@ -1,6 +1,11 @@
 Changelog
 =========
 
+**[HEAD] ----- 2024-12-19** ::
+
+	    update Docs/Changelog.rst Docs/kea_config.pdf
+
+
 **[4.12.0] ----- 2024-12-19** ::
 
 	    add new file toml.py
