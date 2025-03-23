@@ -102,9 +102,13 @@ def _config_networks(kea_conf):
         print ('No [net] section')
         return not okay
 
-    dns_net = kea_conf.net['dns_net']
-    reserved = kea_conf.net['reserved']
+    reserved = kea_conf.net.get('reserved')
     if reserved:
+        dns_net = kea_conf.net.get('dns_net')
+        if not dns_net:
+            print(f'Error: host reservations require "dns_net" in [net] section')
+            return not okay
+
         for host in reserved:
             fqdn = f'{host}.{dns_net}'
             ip = kea_conf.dns.query(fqdn)
