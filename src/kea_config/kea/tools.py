@@ -12,6 +12,9 @@ def list_to_strings (vec):
     """
     strings = None
 
+    if not isinstance(vec, list):
+        return f'"{vec}"'
+
     first = True
     for elem in vec:
         if first:

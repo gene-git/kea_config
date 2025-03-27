@@ -7,6 +7,8 @@ kea-config
 New
 ===
 
+ * Multiple gateway routers. option-data routers can now be a list of gateways.
+
  * On Arch you can build using the provided PKGBUILD in the packaging directory or from the AUR.
    All git tags are signed with arch@sapience.com key which is available via WKD
    or download from https://www.sapience.com/tech. Add the key to your package builder gpg keyring.
@@ -218,7 +220,8 @@ And similarly for standby and backup.
 
       - *routers*
         
-        default gateway / route
+        default gateway(s) / route(s)
+        May be list of ips ["ip1", "ip2",...] or single ip "ip1".
 
       - *ntp-servers*
 

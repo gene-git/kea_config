@@ -242,9 +242,10 @@ def dhcp4_write_subnets (kea_config, fps):
     option_data = net.get('option-data')
     if option_data:
         bcast = option_data.get('broadcast-address')
-        routers = option_data.get('routers')
         ntp = option_data.get('ntp-servers')
         ntp_servers = list_to_strings(ntp)
+        routers = option_data.get('routers')
+        routers = list_to_strings(routers)
 
     #
     # format pool ranges into kea format
@@ -295,8 +296,9 @@ def dhcp4_write_subnets (kea_config, fps):
 
                 fobj.write('\t\t{\n')
                 fobj.write('\t\t\t"space": "dhcp4",\n')
+
                 fobj.write('\t\t\t"name": "routers",\n')
-                fobj.write(f'\t\t\t"data" : "{routers}"\n')
+                fobj.write(f'\t\t\t"data" : {routers}\n')
                 fobj.write('\t\t},\n')
 
                 fobj.write('\t\t{\n')
