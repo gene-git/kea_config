@@ -14,6 +14,8 @@ def dhcp4_write_global_options (kea_config, fps):
     if not options:
         return
 
+    socket_dir = kea_config.socket_dir
+
     domain_name_servers = options['domain-name-servers']
     domain_name = options['domain-name']
     domain_search = options['domain-search']
@@ -74,6 +76,7 @@ def dhcp4_write_top_section (kea_config, fps):
     lifetime = kea_config.global_options.get('valid-lifetime')
     min_lifetime = kea_config.global_options.get('min-valid-lifetime')
     max_lifetime = kea_config.global_options.get('max-valid-lifetime')
+    socket_dir = kea_config.socket_dir
 
     for stype in kea_config.server_types :
         fobj = fps[stype]
@@ -102,7 +105,7 @@ def dhcp4_write_top_section (kea_config, fps):
             fobj.write('\n')
             fobj.write('\t"control-socket": {\n')
             fobj.write('\t\t"socket-type": "unix",\n')
-            fobj.write('\t\t"socket-name": "/var/tmp/kea4-ctrl-socket"\n')
+            fobj.write(f'\t\t"socket-name": "{socket_dir}/kea4-ctrl-socket"\n')
             fobj.write('\t},\n')
 
             fobj.write('\t"lease-database": {\n')

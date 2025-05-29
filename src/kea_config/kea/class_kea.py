@@ -158,6 +158,7 @@ class KeaConfig:
         self.dns = GcDns()
         self.now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.config_file = 'kea-dhcp4-setup.conf'
+        self.socket_dir = '/var/run/kea'
 
         arp = argparse.ArgumentParser(description='kea_config')
 

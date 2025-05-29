@@ -6,6 +6,11 @@ kea-config
 
 New
 ===
+ 
+ * Socket dir now defaults to */var/run/kea*. We prefer */run/kea* per Linux FHS, 
+   but current git HEAD now requires the path to to be */var/run/kea/*. 
+   
+  There is a config option, *socket_dir*, to set this as well.
 
  * Multiple gateway routers. option-data routers can now be a list of gateways.
 

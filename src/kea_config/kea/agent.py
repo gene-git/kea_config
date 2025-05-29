@@ -13,6 +13,7 @@ def write_ctrl_agent (kea_config, fps):
     # pylint: disable=R0915
     now = kea_config.now
     port = kea_config.ctrl_agent_port
+    socket_dir = kea_config.socket_dir
 
     for stype in kea_config.server_types:
         fobj = fps[stype]
@@ -53,17 +54,17 @@ def write_ctrl_agent (kea_config, fps):
             fobj.write('\t\t"control-sockets": {\n')
             fobj.write('\t\t\t"dhcp4": {\n')
             fobj.write('\t\t\t\t"socket-type": "unix",\n')
-            fobj.write('\t\t\t\t"socket-name": "/var/tmp/kea4-ctrl-socket"\n')
+            fobj.write(f'\t\t\t\t"socket-name": "{socket_dir}/kea4-ctrl-socket"\n')
             fobj.write('\t\t\t},\n')
 
             fobj.write('\t\t\t"dhcp6": {\n')
             fobj.write('\t\t\t\t"socket-type": "unix",\n')
-            fobj.write('\t\t\t\t"socket-name": "/var/tmp/kea6-ctrl-socket"\n')
+            fobj.write(f'\t\t\t\t"socket-name": "{socket_dir}/kea6-ctrl-socket"\n')
             fobj.write('\t\t\t},\n')
 
             fobj.write('\t\t\t"d2": {\n')
             fobj.write('\t\t\t\t"socket-type": "unix",\n')
-            fobj.write('\t\t\t\t"socket-name": "/var/tmp/kea-ddns-ctrl-socket"\n')
+            fobj.write(f'\t\t\t\t"socket-name": "{socket_dir}/kea-ddns-ctrl-socket"\n')
             fobj.write('\t\t\t}\n')
 
             fobj.write('\t\t},\n')
