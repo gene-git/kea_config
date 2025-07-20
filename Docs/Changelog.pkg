@@ -1,9 +1,14 @@
 -------------------------------------------------------
  Changelog    : kea_config
- Tags         : 4.13.0 ➙ 5.0.0
+ Tags         : 4.13.0 ➙ HEAD
               : 2024-12-31 ➙ 2025-07-20
               : 6 tags. See Docs for full changelog
 -------------------------------------------------------
+
+ 2025-07-20   : HEAD
+                more readme
+                Readme: tidy up some rst
+                update Docs/Changelog Docs/kea_config.pdf
 
  2025-07-20   : 5.0.0
                 update Docs/Changelog Docs/kea_config.pdf

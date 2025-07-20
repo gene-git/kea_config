@@ -7,12 +7,20 @@ Tags
 
 ::
 
-	4.3.0 (2022-11-05) -> 5.0.0 (2025-07-20)
-	49 commits.
+	4.3.0 (2022-11-05) -> HEAD (2025-07-20)
+	52 commits.
 
 Commits
 =======
 
+
+* 2025-07-20  : **HEAD**
+
+::
+
+                more readme
+                Readme: tidy up some rst
+                update Docs/Changelog Docs/kea_config.pdf
 
 * 2025-07-20  : **5.0.0**
 
