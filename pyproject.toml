@@ -13,14 +13,23 @@ keywords = []
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Programming Language :: Python",
-    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.13",
 ]
 dependencies = []
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/kea_config"]
+include = [
+    "src/kea_config",
+]
 
 [tool.hatch.version]
 path = "src/kea_config/__about__.py"
 
 [[tool.hatch.envs.all.matrix]]
-python = ["3.10", "3.11", "3.12"]
+python = ["3.13", "3.14", "3.15"]
+
+[tool.mypy]
+check_untyped_defs = true
 
 

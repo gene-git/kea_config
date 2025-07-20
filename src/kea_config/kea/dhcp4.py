@@ -5,149 +5,156 @@
  Write out the kea configs
    Output divided into sections
 """
-# pylint: disable=too-many-statements
-from .tools import list_to_strings
+# pylint: disable=too-many-statements, too-many-locals
+# pylint: disable=duplicate-code
 
-def dhcp4_write_global_options (kea_config, fps):
-    """ write the global options part """
-    options = kea_config.global_options
-    if not options:
+from .tools import list_to_strings
+from .kea_data import KeaConfigData
+from .kea_types import FobConf
+
+
+def dhcp4_write_global_options(conf: KeaConfigData,
+                               fobs: FobConf):
+    """
+    write the global options part
+    """
+    opts_global = conf.global_options
+    if not opts_global:
         return
 
-    socket_dir = kea_config.socket_dir
+    domain_name_servers = opts_global['domain-name-servers']
+    domain_name = opts_global['domain-name']
+    domain_search = opts_global['domain-search']
+    ntp_servers = opts_global['ntp-servers']
 
-    domain_name_servers = options['domain-name-servers']
-    domain_name = options['domain-name']
-    domain_search = options['domain-search']
-    ntp_servers = options['ntp-servers']
-
+    #
+    # map lists to comma separated strings
+    #
     dns_servers = list_to_strings(domain_name_servers)
     dns_search = list_to_strings(domain_search)
     ntp_servers = list_to_strings(ntp_servers)
 
-    #
-    # map list to comma separated strings
-    #
-    for stype in kea_config.server_types:
-        fobj = fps[stype]
-        if fobj:
-            fobj.write('\n')
-            fobj.write('\t"option-data" : [\n')
+    for stype in conf.server_types:
+        fob = fobs[stype]
+        if fob:
+            fob.write('\n')
+            fob.write('\t"option-data" : [\n')
             if domain_name_servers:
-                fobj.write('\t{\n')
-                fobj.write('\t\t"name" : "domain-name-servers",\n')
-                fobj.write('\t\t"data" : ' + dns_servers + '\n')
-                fobj.write('\t}')
+                fob.write('\t{\n')
+                fob.write('\t\t"name" : "domain-name-servers",\n')
+                fob.write('\t\t"data" : ' + dns_servers + '\n')
+                fob.write('\t}')
 
             if domain_name:
-                fobj.write(',\n')
-                fobj.write('\t{\n')
-                fobj.write('\t\t"name" : "domain-name",\n')
-                fobj.write('\t\t"data" : "' + domain_name + '"\n')
-                fobj.write('\t}')
+                fob.write(',\n')
+                fob.write('\t{\n')
+                fob.write('\t\t"name" : "domain-name",\n')
+                fob.write('\t\t"data" : "' + domain_name + '"\n')
+                fob.write('\t}')
 
             if domain_search:
-                fobj.write(',\n')
-                fobj.write('\t{\n')
-                fobj.write('\t\t"name" : "domain-search",\n')
-                fobj.write('\t\t"data" : ' + dns_search + '\n')
-                fobj.write('\t}')
+                fob.write(',\n')
+                fob.write('\t{\n')
+                fob.write('\t\t"name" : "domain-search",\n')
+                fob.write('\t\t"data" : ' + dns_search + '\n')
+                fob.write('\t}')
 
             if ntp_servers:
-                fobj.write(',\n')
-                fobj.write('\t{\n')
-                fobj.write('\t\t"name" : "ntp-servers",\n')
-                fobj.write(f'\t\t"data" : {ntp_servers}\n')
-                fobj.write('\t}\n')
-            fobj.write('\n')
-            fobj.write('\t],\n')
+                fob.write(',\n')
+                fob.write('\t{\n')
+                fob.write('\t\t"name" : "ntp-servers",\n')
+                fob.write(f'\t\t"data" : {ntp_servers}\n')
+                fob.write('\t}\n')
+            fob.write('\n')
+            fob.write('\t],\n')
 
-def dhcp4_write_top_section (kea_config, fps):
+
+def dhcp4_write_top_section(conf, fobs):
     """
     Write out the top of configs
     """
-
-    title = kea_config.title
+    title = conf.title
     if not title:
         title = ''
 
-    now = kea_config.now
+    now = conf.now
 
-    lifetime = kea_config.global_options.get('valid-lifetime')
-    min_lifetime = kea_config.global_options.get('min-valid-lifetime')
-    max_lifetime = kea_config.global_options.get('max-valid-lifetime')
-    socket_dir = kea_config.socket_dir
+    lifetime = conf.global_options.get('valid-lifetime')
+    min_lifetime = conf.global_options.get('min-valid-lifetime')
+    max_lifetime = conf.global_options.get('max-valid-lifetime')
+    socket_dir = conf.socket_dir
 
-    for stype in kea_config.server_types :
-        fobj = fps[stype]
-        if fobj:
-            server = getattr(kea_config, stype)
+    for stype in conf.server_types:
+        fob = fobs[stype]
+        if fob:
+            server = getattr(conf, stype)
             iface = server.interface
             hostname = server.hostname
 
-            fobj.write('//\n')
-            fobj.write(f'// Kea Config : {hostname}\n')
-            fobj.write(f'//    Title : {title}\n')
-            fobj.write(f'// Server type : {stype}\n')
-            fobj.write(f'// Generated at : {now }\n')
-            fobj.write('//\n')
+            fob.write('//\n')
+            fob.write(f'// Kea Config : {hostname}\n')
+            fob.write(f'//    Title : {title}\n')
+            fob.write(f'// Server type : {stype}\n')
+            fob.write(f'// Generated at : {now}\n')
+            fob.write('//\n')
 
-            fobj.write('\n')
-            fobj.write('{\n')
-            fobj.write('"Dhcp4": {\n')
-            fobj.write('\t"authoritative": true,\n')
-            fobj.write('\t"interfaces-config":\n')
-            fobj.write('\t{\n')
-            fobj.write(f'\t\t"interfaces": ["{iface}"],\n')
-            fobj.write('\t\t"dhcp-socket-type": "raw" \n')
-            fobj.write('\t},\n')
+            fob.write('\n')
+            fob.write('{\n')
+            fob.write('"Dhcp4": {\n')
+            fob.write('\t"authoritative": true,\n')
+            fob.write('\t"interfaces-config":\n')
+            fob.write('\t{\n')
+            fob.write(f'\t\t"interfaces": ["{iface}"],\n')
+            fob.write('\t\t"dhcp-socket-type": "raw" \n')
+            fob.write('\t},\n')
 
-            fobj.write('\n')
-            fobj.write('\t"control-socket": {\n')
-            fobj.write('\t\t"socket-type": "unix",\n')
-            fobj.write(f'\t\t"socket-name": "{socket_dir}/kea4-ctrl-socket"\n')
-            fobj.write('\t},\n')
+            fob.write('\n')
+            fob.write('\t"control-socket": {\n')
+            fob.write('\t\t"socket-type": "unix",\n')
+            fob.write(f'\t\t"socket-name": "{socket_dir}/kea4-ctrl-socket"\n')
+            fob.write('\t},\n')
 
-            fobj.write('\t"lease-database": {\n')
-            fobj.write('\t\t"type": "memfile",\n')
-            fobj.write('\t\t"persist": true,\n')
-            fobj.write('\t\t"name": "/var/lib/kea/kea-leases4.csv",\n')
-            fobj.write('\t\t"lfc-interval": 3600\n')
-            fobj.write('\t},\n')
+            fob.write('\t"lease-database": {\n')
+            fob.write('\t\t"type": "memfile",\n')
+            fob.write('\t\t"persist": true,\n')
+            fob.write('\t\t"name": "/var/lib/kea/kea-leases4.csv",\n')
+            fob.write('\t\t"lfc-interval": 3600\n')
+            fob.write('\t},\n')
 
-            fobj.write('\t"expired-leases-processing": {\n')
-            fobj.write('\t\t"reclaim-timer-wait-time": 10,\n')
-            fobj.write('\t\t"flush-reclaimed-timer-wait-time": 25,\n')
-            fobj.write('\t\t"hold-reclaimed-time": 3600,\n')
-            fobj.write('\t\t"max-reclaim-leases": 100,\n')
-            fobj.write('\t\t"max-reclaim-time": 250,\n')
-            fobj.write('\t\t"unwarned-reclaim-cycles": 5\n')
-            fobj.write('\t},\n')
+            fob.write('\t"expired-leases-processing": {\n')
+            fob.write('\t\t"reclaim-timer-wait-time": 10,\n')
+            fob.write('\t\t"flush-reclaimed-timer-wait-time": 25,\n')
+            fob.write('\t\t"hold-reclaimed-time": 3600,\n')
+            fob.write('\t\t"max-reclaim-leases": 100,\n')
+            fob.write('\t\t"max-reclaim-time": 250,\n')
+            fob.write('\t\t"unwarned-reclaim-cycles": 5\n')
+            fob.write('\t},\n')
 
-            fobj.write('\t"calculate-tee-times": true,\n')
-            fobj.write('\t"offer-lifetime": 60,\n')
+            fob.write('\t"calculate-tee-times": true,\n')
+            fob.write('\t"offer-lifetime": 60,\n')
 
             if min_lifetime:
-                fobj.write(f'\t"min-valid-lifetime": {min_lifetime},\n')
+                fob.write(f'\t"min-valid-lifetime": {min_lifetime},\n')
             if lifetime:
-                fobj.write(f'\t"valid-lifetime": {lifetime},\n')
+                fob.write(f'\t"valid-lifetime": {lifetime},\n')
             if lifetime:
-                fobj.write(f'\t"max-valid-lifetime": {max_lifetime},\n')
+                fob.write(f'\t"max-valid-lifetime": {max_lifetime},\n')
 
-def dhcp4_write_peers (kea_config, fobj):
+
+def dhcp4_write_peers(conf, fob):
     """
     Write out the server section (the peers)
     """
 
-    if not fobj:
+    if not fob:
         return
 
-    num_peers = len(kea_config.server_types)
+    num_peers = len(conf.server_types)
 
-    fobj.write('\n\t\t\t\t"peers": [')
+    fob.write('\n\t\t\t\t"peers": [')
     count = 1
-    for stype in kea_config.server_types :
-        server = getattr(kea_config, stype)
+    for stype in conf.server_types:
+        server = getattr(conf, stype)
 
         if stype == 'backup':
             failover = 'false'
@@ -163,77 +170,82 @@ def dhcp4_write_peers (kea_config, fobj):
         auth_user = server.auth_user
         auth_pass = server.auth_password
 
-        fobj.write('\n\t\t\t\t{')
-        fobj.write(f'\n\t\t\t\t\t"name": "{name}",')
-        fobj.write(f'\n\t\t\t\t\t"url": "{url}",')
-        fobj.write(f'\n\t\t\t\t\t"basic-auth-user": "{auth_user}",')
-        fobj.write(f'\n\t\t\t\t\t"basic-auth-password": "{auth_pass}",')
-        fobj.write(f'\n\t\t\t\t\t"role": "{role}",')
-        fobj.write(f'\n\t\t\t\t\t"auto-failover": {failover}\n')
-        fobj.write('\n\t\t\t\t}')
+        fob.write('\n\t\t\t\t{')
+        fob.write(f'\n\t\t\t\t\t"name": "{name}",')
+        fob.write(f'\n\t\t\t\t\t"url": "{url}",')
+        fob.write(f'\n\t\t\t\t\t"basic-auth-user": "{auth_user}",')
+        fob.write(f'\n\t\t\t\t\t"basic-auth-password": "{auth_pass}",')
+        fob.write(f'\n\t\t\t\t\t"role": "{role}",')
+        fob.write(f'\n\t\t\t\t\t"auto-failover": {failover}\n')
+        fob.write('\n\t\t\t\t}')
 
         if count < num_peers:
-            fobj.write(',')
+            fob.write(',')
         count = count + 1
 
-    fobj.write('\n\t\t\t\t]')
+    fob.write('\n\t\t\t\t]')
 
-def dhcp4_write_hooks_libs (kea_config, fps):
+
+def dhcp4_write_hooks_libs(conf, fobs):
     """
     Write out the hooks library section
     """
 
-    for stype in kea_config.server_types :
-        fobj = fps[stype]
-        if fobj:
+    lib: str
+    for stype in conf.server_types:
+        fob = fobs[stype]
+        if fob:
             name = f'kea-{stype}'
-            #role = stype
+            # role = stype
 
-            fobj.write('\n')
-            fobj.write('\t//\n')
-            fobj.write('\t// Hooks\n')
-            fobj.write('\t//')
+            fob.write('\n')
+            fob.write('\t//\n')
+            fob.write('\t// Hooks\n')
+            fob.write('\t//')
 
-            fobj.write('\n\t"hooks-libraries": [')
-            fobj.write('\n\t\t{')
-            fobj.write('\n\t\t\t"library": "/usr/lib/kea/hooks/libdhcp_lease_cmds.so",')
-            fobj.write('\n\t\t\t"parameters": { }')
-            fobj.write('\n\t\t}')
+            lib = '/usr/lib/kea/hooks/libdhcp_lease_cmds.so'
+            fob.write('\n\t"hooks-libraries": [')
+            fob.write('\n\t\t{')
+            fob.write(f'\n\t\t\t"library": "{lib}",')
+            fob.write('\n\t\t\t"parameters": { }')
+            fob.write('\n\t\t}')
 
-            if kea_config.has_standby:
-                fobj.write(',')
-                fobj.write('\n\t\t{')
-                fobj.write('\n\t\t\t"library": "/usr/lib/kea/hooks/libdhcp_ha.so",')
-                fobj.write('\n\t\t\t"parameters": {')
-                fobj.write('\n\t\t\t"high-availability": [')
-                fobj.write('\n\t\t\t{')
-                fobj.write(f'\n\t\t\t\t"this-server-name": "{name}",')
-                fobj.write('\n\t\t\t\t"mode": "hot-standby",')
-                fobj.write('\n\t\t\t\t"heartbeat-delay": 10000,')
-                fobj.write('\n\t\t\t\t"max-response-delay": 10000,')
-                fobj.write('\n\t\t\t\t"max-ack-delay": 5000,')
-                fobj.write('\n\t\t\t\t"max-unacked-clients": 5,')
-                fobj.write('\n\t\t\t\t"sync-timeout": 60000,')
+            if conf.has_standby:
+                lib = '/usr/lib/kea/hooks/libdhcp_ha.so'
+                fob.write(',')
+                fob.write('\n\t\t{')
+                fob.write(f'\n\t\t\t"library": "{lib}",')
+                fob.write('\n\t\t\t"parameters": {')
+                fob.write('\n\t\t\t"high-availability": [')
+                fob.write('\n\t\t\t{')
+                fob.write(f'\n\t\t\t\t"this-server-name": "{name}",')
+                fob.write('\n\t\t\t\t"mode": "hot-standby",')
+                fob.write('\n\t\t\t\t"heartbeat-delay": 10000,')
+                fob.write('\n\t\t\t\t"max-response-delay": 10000,')
+                fob.write('\n\t\t\t\t"max-ack-delay": 5000,')
+                fob.write('\n\t\t\t\t"max-unacked-clients": 5,')
+                fob.write('\n\t\t\t\t"sync-timeout": 60000,')
 
-                dhcp4_write_peers(kea_config, fobj)
+                dhcp4_write_peers(conf, fob)
 
-                fobj.write('\n\t\t\t}')
-                fobj.write('\n\t\t\t]')       # high avail
-                fobj.write('\n\t\t}')
+                fob.write('\n\t\t\t}')
+                fob.write('\n\t\t\t]')       # high avail
+                fob.write('\n\t\t}')
 
-                fobj.write('\n\t}')
-            fobj.write('\n\t],')
+                fob.write('\n\t}')
+            fob.write('\n\t],')
 
-def dhcp4_write_subnets (kea_config, fps):
+
+def dhcp4_write_subnets(conf, fobs):
     """
     Write out the subnet (we handle 1 subnet currently.
     """
-    # pylint: disable=R0914,R0915
+    # pylint: disable=
     #
     # handle multiple pool ranges in a subnet
     # pools: [{"pool": "range 1"}, {"pool": "range 2"}]
     #
-    net = kea_config.net
+    net = conf.net
 
     pools = net['pools']
     subnet = net['subnet']
@@ -255,84 +267,85 @@ def dhcp4_write_subnets (kea_config, fps):
     #
     pool_info = None
     for item in pools:
-        if pool_info :
+        if pool_info:
             pool_info = pool_info + f', {{"pool": "{item}"}}'
         else:
             pool_info = f'{{"pool": "{item}"}}'
 
     subnet_id = '1'
-    for stype in kea_config.server_types :
-        fobj = fps[stype]
-        if fobj:
-            server = getattr(kea_config, stype)
+    for stype in conf.server_types:
+        fob = fobs[stype]
+        if fob:
+            server = getattr(conf, stype)
             iface = server.interface
 
-            fobj.write('\n')
-            fobj.write('\t//\n')
-            fobj.write('\t// IPv4 subnet\n')
-            fobj.write('\t//\n')
+            fob.write('\n')
+            fob.write('\t//\n')
+            fob.write('\t// IPv4 subnet\n')
+            fob.write('\t//\n')
 
-            fobj.write('\t"subnet4": [\n')
-            fobj.write('\t{\n')
-            fobj.write(f'\t\t"id": {subnet_id},\n')
-            fobj.write(f'\t\t"subnet": "{subnet}",\n')
-            fobj.write(f'\t\t"pools": [{pool_info}],\n')
+            fob.write('\t"subnet4": [\n')
+            fob.write('\t{\n')
+            fob.write(f'\t\t"id": {subnet_id},\n')
+            fob.write(f'\t\t"subnet": "{subnet}",\n')
+            fob.write(f'\t\t"pools": [{pool_info}],\n')
 
             if min_lifetime:
-                fobj.write(f'\t\t"min-valid-lifetime": {min_lifetime},\n')
+                fob.write(f'\t\t"min-valid-lifetime": {min_lifetime},\n')
             if lifetime:
-                fobj.write(f'\t\t"valid-lifetime": {lifetime},\n')
+                fob.write(f'\t\t"valid-lifetime": {lifetime},\n')
             if max_lifetime:
-                fobj.write(f'\t\t"max-valid-lifetime": {max_lifetime},\n')
+                fob.write(f'\t\t"max-valid-lifetime": {max_lifetime},\n')
 
-            fobj.write('\t\t"authoritative": true,\n')
-            fobj.write(f'\t\t"interface": "{iface}",\n')
+            fob.write('\t\t"authoritative": true,\n')
+            fob.write(f'\t\t"interface": "{iface}",\n')
 
             if option_data:
-                fobj.write('\t\t"option-data":[\n')
+                fob.write('\t\t"option-data":[\n')
 
-                fobj.write('\t\t{\n')
-                fobj.write('\t\t\t"space": "dhcp4",\n')
-                fobj.write('\t\t\t"name": "broadcast-address",\n')
-                fobj.write(f'\t\t\t"data" : "{bcast}"\n')
-                fobj.write('\t\t},\n')
+                fob.write('\t\t{\n')
+                fob.write('\t\t\t"space": "dhcp4",\n')
+                fob.write('\t\t\t"name": "broadcast-address",\n')
+                fob.write(f'\t\t\t"data" : "{bcast}"\n')
+                fob.write('\t\t},\n')
 
-                fobj.write('\t\t{\n')
-                fobj.write('\t\t\t"space": "dhcp4",\n')
+                fob.write('\t\t{\n')
+                fob.write('\t\t\t"space": "dhcp4",\n')
 
-                fobj.write('\t\t\t"name": "routers",\n')
-                fobj.write(f'\t\t\t"data" : {routers}\n')
-                fobj.write('\t\t},\n')
+                fob.write('\t\t\t"name": "routers",\n')
+                fob.write(f'\t\t\t"data" : {routers}\n')
+                fob.write('\t\t},\n')
 
-                fobj.write('\t\t{\n')
-                fobj.write('\t\t\t"space": "dhcp4",\n')
-                fobj.write('\t\t\t"name": "ntp-servers",\n')
-                fobj.write(f'\t\t\t"data" : {ntp_servers}\n')
-                fobj.write('\t\t}\n')
+                fob.write('\t\t{\n')
+                fob.write('\t\t\t"space": "dhcp4",\n')
+                fob.write('\t\t\t"name": "ntp-servers",\n')
+                fob.write(f'\t\t\t"data" : {ntp_servers}\n')
+                fob.write('\t\t}\n')
 
-                fobj.write('\t\t],\n')
+                fob.write('\t\t],\n')
 
-def dhcp4_write_reserved (kea_config, fps):
+
+def dhcp4_write_reserved(conf, fobs):
     """
     Write out the reserved hosts - mac and ip
     """
 
-    reserved = kea_config.net.get('reserved')
+    reserved = conf.net.get('reserved')
     if not reserved:
         return
 
-    for stype in kea_config.server_types :
-        fobj = fps[stype]
-        if fobj:
-            fobj.write ('\n')
-            fobj.write('\t\t//\n')
-            fobj.write('\t\t// IP Reservations\n')
-            fobj.write('\t\t//\n')
+    for stype in conf.server_types:
+        fob = fobs[stype]
+        if fob:
+            fob.write('\n')
+            fob.write('\t\t//\n')
+            fob.write('\t\t// IP Reservations\n')
+            fob.write('\t\t//\n')
 
-            fobj.write('\n')
+            fob.write('\n')
             # 2024-05-22 reservation-mode has been deprecated
-            # fobj.write('\t\t"reservation-mode": "out-of-pool",\n')
-            fobj.write('\t\t"reservations": [\n')
+            # fob.write('\t\t"reservation-mode": "out-of-pool",\n')
+            fob.write('\t\t"reservations": [\n')
 
             first = True
             for host in reserved:
@@ -340,46 +353,46 @@ def dhcp4_write_reserved (kea_config, fps):
                 mac = reserved[host]['hw-address']
                 fqdn = reserved[host].get('fqdn')
                 if not first:
-                    fobj.write(',\n')
+                    fob.write(',\n')
                 else:
                     first = False
-                fobj.write('\t\t{\n')
+                fob.write('\t\t{\n')
                 if fqdn:
-                    fobj.write(f'\t\t\t"hostname": "{fqdn}",\n')
+                    fob.write(f'\t\t\t"hostname": "{fqdn}",\n')
                 else:
-                    fobj.write(f'\t\t\t"hostname": "{host}",\n')
-                fobj.write(f'\t\t\t"hw-address": "{mac}",\n')
-                fobj.write(f'\t\t\t"ip-address": "{ip}"\n')
-                fobj.write('\t\t}')
-            fobj.write('\n')
-            fobj.write('\t\t]\n')
-            fobj.write('\t}\n')
-            fobj.write('\t],\n')
+                    fob.write(f'\t\t\t"hostname": "{host}",\n')
+                fob.write(f'\t\t\t"hw-address": "{mac}",\n')
+                fob.write(f'\t\t\t"ip-address": "{ip}"\n')
+                fob.write('\t\t}')
+            fob.write('\n')
+            fob.write('\t\t]\n')
+            fob.write('\t}\n')
+            fob.write('\t],\n')
 
 
-def dhcp4_write_loggers (kea_config, fps):
+def dhcp4_write_loggers(conf, fobs):
     """
     Write out the logging section
     """
-    for stype in kea_config.server_types :
-        fobj = fps[stype]
-        if fobj:
-            fobj.write('\n')
-            fobj.write('\t"loggers": [\n')
-            fobj.write('\t{\n')
-            fobj.write('\t\t"name": "kea-dhcp4",\n')
-            fobj.write('\t\t"output_options": [\n')
-            fobj.write('\t\t{\n')
-            fobj.write('\t\t\t"output": "/var/log/kea/kea-dhcp4.log",\n')
-            fobj.write('\t\t\t"flush": false,\n')
-            fobj.write('\t\t\t"maxsize": 1048576,\n')
-            fobj.write('\t\t\t"maxver": 8\n')
-            fobj.write('\t\t}\n')
-            fobj.write('\t\t],\n')
-            fobj.write('\t\t"severity": "WARN",\n')
-            fobj.write('\t\t"debuglevel": 0\n')
+    for stype in conf.server_types:
+        fob = fobs[stype]
+        if fob:
+            fob.write('\n')
+            fob.write('\t"loggers": [\n')
+            fob.write('\t{\n')
+            fob.write('\t\t"name": "kea-dhcp4",\n')
+            fob.write('\t\t"output_options": [\n')
+            fob.write('\t\t{\n')
+            fob.write('\t\t\t"output": "/var/log/kea/kea-dhcp4.log",\n')
+            fob.write('\t\t\t"flush": false,\n')
+            fob.write('\t\t\t"maxsize": 1048576,\n')
+            fob.write('\t\t\t"maxver": 8\n')
+            fob.write('\t\t}\n')
+            fob.write('\t\t],\n')
+            fob.write('\t\t"severity": "WARN",\n')
+            fob.write('\t\t"debuglevel": 0\n')
 
-            fobj.write('\t}\n')
-            fobj.write(']\n')
-            fobj.write('}\n')
-            fobj.write('}\n')
+            fob.write('\t}\n')
+            fob.write(']\n')
+            fob.write('}\n')
+            fob.write('}\n')

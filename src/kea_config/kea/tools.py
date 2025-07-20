@@ -1,41 +1,41 @@
 # SPDX-License-Identifier: MIT
 # SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
 """
- Support tools for kea configurator
+Support tools for kea configurator
 """
+from typing import IO
 
-def list_to_strings (vec):
+
+def list_to_strings(vec: list[str]) -> str:
     """
     list_to_strings()
     Kea needs some things as list inside quotes: "aaa, nnn, ccc, ..."
     convert python list to this format
     """
-    strings = None
+    strings: str = ''
 
     if not isinstance(vec, list):
         return f'"{vec}"'
 
-    first = True
     for elem in vec:
-        if first:
-            strings = '"' + elem
-            first = False
+        if strings:
+            strings += ', ' + elem
         else:
-            strings = strings + ', ' + elem
+            strings = elem
 
-    if not first:
-        strings = strings + '"'
-
+    strings = '"' + strings + '"'
     return strings
 
-def open_file(path, mode):
+
+def open_file(path: str, mode: str) -> IO | None:
     """
     Open a file and return file object
     """
-    # pylint: disable=W1514,R1732
+    # pylint: disable=unspecified-encoding, consider-using-with
     try:
-        fobj = open(path, mode)
+        fob = open(path, mode)
+        return fob
+
     except OSError as err:
         print(f'Error opening file {path} : {err}')
-        fobj = None
-    return fobj
+        return None

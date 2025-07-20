@@ -4,53 +4,6 @@
 kea-config
 ##########
 
-New
-===
- 
- * Socket dir now defaults to */var/run/kea*. We prefer */run/kea* per Linux FHS, 
-   but current git HEAD now requires the path to to be */var/run/kea/*. 
-   
-  There is a config option, *socket_dir*, to set this as well.
-
- * Multiple gateway routers. option-data routers can now be a list of gateways.
-
- * On Arch you can build using the provided PKGBUILD in the packaging directory or from the AUR.
-   All git tags are signed with arch@sapience.com key which is available via WKD
-   or download from https://www.sapience.com/tech. Add the key to your package builder gpg keyring.
-   The key is included in the Arch package and the source= line with *?signed* at the end can be used
-   to verify the git tag.  You can also manually verify the signature
-
- * Add output option "calculate-tee-times" : true (replaces explicit renew-timer, rebind-timer)
-
- * Add output option: "offer-lifetime": 60
-
- * Add global input options: "min-valid-lifetime", "valid-lifetime", "max-valid-lifetime"
-
-   These can be overriden at the subnet level
-
- * If some lifetimes are set, missing ones are imputed using:
-
-   min-valid-lifetime = valid-lifetime / 2
-
-   max-valid-lifetime = valid-lifetime * 2
-
- * reservations : use FQDN for hostname. Hostname must be requested by client for kea to send it.
-
-
-Breaking Change
----------------
-
-kea has deprecated the option *reservation-mode* for versions of kea newer than 2.4.
-These new versions will error if this option is used.
-
-We have now removed this option from *kea-config* generated output. 
-
-Please re-run *kea-config* to generate fresh configs. These new configs are compatible 
-with version of kea newer than 2.4 as well as version 2.4.
-
-Existing file */etc/kea/kea-dhcp4.conf* can also be edited to remove the line with the
-deprecated option.
-
 Overview
 ========
 
@@ -85,6 +38,62 @@ Contents
     2. Using kea-config
     3. Summary of config variables
     4. Discussion and Next Steps
+
+
+* On Arch you can build using the provided PKGBUILD in the packaging directory or from the AUR.
+  All git tags are signed with arch@sapience.com key which is available via WKD
+  or download from https://www.sapience.com/tech. Add the key to your package builder gpg keyring.
+  The key is included in the Arch package and the source= line with *?signed* at the end can be used
+  to verify the git tag.  You can also manually verify the signature
+
+
+New / Interesting
+=================
+
+**5.0.0**
+
+* Code re-org/cleanup.
+* Code now complies with PEP-8, PEP-257 and PEP-484 style and type annotations
+
+**Older**
+ 
+* Socket dir now defaults to */var/run/kea*. We prefer */run/kea* per Linux FHS, 
+  but current git HEAD now requires the path to to be */var/run/kea/*. 
+   
+  There is a config option, *socket_dir*, to set this as well.
+
+* Multiple gateway routers. option-data routers can now be a list of gateways.
+
+* Add output option "calculate-tee-times" : true (replaces explicit renew-timer, rebind-timer)
+
+* Add output option: "offer-lifetime": 60
+
+* Add global input options: "min-valid-lifetime", "valid-lifetime", "max-valid-lifetime"
+
+  These can be overriden at the subnet level
+
+* If some lifetimes are set, missing ones are imputed using:
+
+  min-valid-lifetime = valid-lifetime / 2
+
+  max-valid-lifetime = valid-lifetime * 2
+
+* reservations : use FQDN for hostname. Hostname must be requested by client for kea to send it.
+
+
+Breaking Change
+---------------
+
+kea has deprecated the option *reservation-mode* for versions of kea newer than 2.4.
+These new versions will error if this option is used.
+
+We have now removed this option from *kea-config* generated output. 
+
+Please re-run *kea-config* to generate fresh configs. These new configs are compatible 
+with version of kea newer than 2.4 as well as version 2.4.
+
+Existing file */etc/kea/kea-dhcp4.conf* can also be edited to remove the line with the
+deprecated option.
 
 Installation  
 ============

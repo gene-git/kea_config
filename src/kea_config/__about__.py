@@ -3,4 +3,4 @@
 """
 Project kea-config
 """
-__version__ = "4.16.0"
+__version__ = "5.0.0"
