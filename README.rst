@@ -169,13 +169,13 @@ See the sample config for additional details. We summarize the main pieces here:
 
 * *title*
 
-   For human use only - not used by kea-config.
+  For human use only - not used by kea-config.
 
 * *conf_dir*
 
-   Directory where generated kea configs reside. What I do is rsync this directory to
-   /etc/kea/ on each kea server. Each server then has a soft link to its own specific config.
-   For example on my primary server I have
+  Directory where generated kea configs reside. What I do is rsync this directory to
+  /etc/kea/ on each kea server. Each server then has a soft link to its own specific config.
+  For example on my primary server I have
 
 .. code:: bash
 
@@ -193,10 +193,10 @@ And similarly for standby and backup.
 
   This section has some common dhcp information shared with dhcp clients:
 
-   * domain-name-servers - list of DNS server IPs 
-   * domain-name - what is sounds like
-   * domain-search - list of (sub)domains to search (if any)
-   * ntp-servers - list of local ntp server IPs (if any)
+  * domain-name-servers - list of DNS server IPs 
+  * domain-name - what is sounds like
+  * domain-search - list of (sub)domains to search (if any)
+  * ntp-servers - list of local ntp server IPs (if any)
 
 * *[server.primary]* 
 
