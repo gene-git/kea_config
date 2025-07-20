@@ -7,17 +7,18 @@ Tags
 
 ::
 
-	4.3.0 (2022-11-05) -> HEAD (2025-07-20)
-	48 commits.
+	4.3.0 (2022-11-05) -> 5.0.0 (2025-07-20)
+	49 commits.
 
 Commits
 =======
 
 
-* 2025-07-20  : **HEAD**
+* 2025-07-20  : **5.0.0**
 
 ::
 
+                update Docs/Changelog Docs/kea_config.pdf
                 Code re-org/cleanup.
                 Code now complies with PEP-8, PEP-257 and PEP-484 style and type annotations
  2025-05-29     update Docs/Changelog Docs/kea_config.pdf
