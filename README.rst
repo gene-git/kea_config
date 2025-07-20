@@ -99,8 +99,9 @@ Installation
 ============
 
 Available on
- * `Github`_
- * `Archlinux AUR`_
+
+* `Github`_
+* `Archlinux AUR`_
 
 On Arch you can build using the PKGBUILD provided in packaging directory or from the AUR package.
 
@@ -166,11 +167,11 @@ e.g.::
 
 See the sample config for additional details. We summarize the main pieces here:
 
- * *title*
+* *title*
 
    For human use only - not used by kea-config.
 
- * *conf_dir*
+* *conf_dir*
 
    Directory where generated kea configs reside. What I do is rsync this directory to
    /etc/kea/ on each kea server. Each server then has a soft link to its own specific config.
@@ -183,71 +184,72 @@ See the sample config for additional details. We summarize the main pieces here:
 
 And similarly for standby and backup. 
 
- * *server_types*
+* *server_types*
 
-   The list of servers used - should contain at least 'primary'. 
-   e.g. server_types = ['primary',  'standby', 'backup']
+  The list of servers used - should contain at least 'primary'. 
+  e.g. server_types = ['primary',  'standby', 'backup']
 
- * [*global_options*]
+* [*global_options*]
 
-   This section has some common dhcp information shared with dhcp clients:
+  This section has some common dhcp information shared with dhcp clients:
 
-        * domain-name-servers - list of DNS server IPs 
-        * domain-name - what is sounds like
-        * domain-search - list of (sub)domains to search (if any)
-        * ntp-servers - list of local ntp server IPs (if any)
+   * domain-name-servers - list of DNS server IPs 
+   * domain-name - what is sounds like
+   * domain-search - list of (sub)domains to search (if any)
+   * ntp-servers - list of local ntp server IPs (if any)
 
- * *[server.primary]* 
+* *[server.primary]* 
 
-    Provides the information needed for the primary server
-    interface, hostname, port, auth_user and auth_password
+  Provides the information needed for the primary server
+  interface, hostname, port, auth_user and auth_password
 
- * *[server.standby]* *[server.backup]*
+* *[server.standby]* *[server.backup]*
 
-   Same format as primary server section. Optional and only used if turned on in *server_types* list.
+  Same format as primary server section. Optional and only used if turned on in *server_types* list.
 
- * *[net]*
+* *[net]*
 
-   This section describes the standard dhcp information including host IP reservations. 
+  This section describes the standard dhcp information including host IP reservations. 
 
-    * dns_net
+  * dns_net
 
-      internal domain, used to lookup IP for host reservations.
+    internal domain, used to lookup IP for host reservations.
 
-    * pools 
+  * pools 
 
-      list of IP ranges to use
+    list of IP ranges to use
 
-    * subnet 
+  * subnet 
+
+    what it sounds like
+
+  * max-valid-lifetime 
+
+    as usual in seconds 
+
+  * *[net.option-data]*
+
+    sub section with:
+
+    * *broadcast-address*
+
+    * *routers*
       
-      what it sounds like
+      Default gateway(s) / route(s).
+      May be list of ips ["ip1", "ip2",...] or a single ip "ip1".
 
-    * max-valid-lifetime 
+    * *ntp-servers*
 
-      as usual in seconds 
+      A list
 
-    * *[net.option-data]*
+      * *[net.reserved.XXX]*
 
-      sub section with:
+        Reservation for hostname *XXX*: 
 
-      - *broadcast-address*
+        hardware-address = "mac address" 
 
-      - *routers*
-        
-        default gateway(s) / route(s)
-        May be list of ips ["ip1", "ip2",...] or single ip "ip1".
-
-      - *ntp-servers*
-
-        A list
-
-        * *[net.reserved.XXX]*
-
-          host XXX 
-          hardware-address = "mac address" 
-
-          Will reserve the IP for XXX based on dns lookup of XXX.
-          Have as many of these as needed.
+        Will reserve the IP for *XXX* based on dns lookup of XXX.
+        Can be as many host reservations as needed.
 
 
 Discussion and Next Steps
