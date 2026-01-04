@@ -50,6 +50,14 @@ Contents
 New / Interesting
 =================
 
+** 5.2.0**
+
+* Code Reorg
+* Switch packaging from hatch to uv
+* Testing to confirm all working on python 3.14.2
+* License GPL-2.0-or-later
+
+
 **5.0.0**
 
 * Code re-org/cleanup.
@@ -296,10 +304,9 @@ Dependencies
 Philosophy
 ==========
 
-We follow the *live at head commit* philosophy. This means we recommend using the
-latest commit on git master branch. We also provide git tags.
-
-This approach is also taken by Google [1]_ [2]_.
+We follow the *live at head commit* philosophy as recommended by
+Google's Abseil team [1]_.  This means we recommend using the
+latest commit on git master branch. 
 
 
 License
@@ -307,12 +314,11 @@ License
 
 Created by Gene C. and licensed under the terms of the MIT license.
 
- * SPDX-License-Identifier: MIT
+ * SPDX-License-Identifier:GPL-2.0-or-later
  * Copyright (c) 2022-present Gene C
 
 .. _Github: https://github.com/gene-git/kea_config
 .. _Archlinux AUR: https://aur.archlinux.org/packages/kea_config
 
-.. [1] https://github.com/google/googletest
-.. [2] https://abseil.io/about/philosophy#upgrade-support
+.. [1] https://abseil.io/about/philosophy#upgrade-support
 

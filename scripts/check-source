@@ -1,0 +1,19 @@
+#!/usr/bin/bash
+#
+# Source code checks.
+#
+# Run in top level
+# Requires
+# - pylint
+# - pycodestyle
+# - mypy
+
+# code
+mod_dir="kea_config_mod"
+cd ./src
+PYTHONPATH=. pylint $mod_dir/*y $mod_dir/*/*py
+PYTHONPATH=. pycodestyle --max-line-length=110 $mod_dir/*y $mod_dir/*/*py
+
+mypy --check-untyped-defs --follow-untyped-imports $mod_dir
+
+

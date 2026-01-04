@@ -1,10 +1,9 @@
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["uv_build>=0.9.21,<=1.0.0"]
+build-backend = "uv_build"
 
 [project]
 name = "kea_config"
-dynamic = ["version"]
 description = "Manage kea dhcp from simple conf file (gc)"
 authors = [{ name = "Gene C", email = "arch@sapience.com" }]
 license = "MIT"
@@ -14,20 +13,30 @@ classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
 ]
+requires-python = ">=3.13"
+version = "5.2.0"
 dependencies = []
 
-[tool.hatch.build.targets.wheel]
-packages = ["src/kea_config"]
-include = [
-    "src/kea_config",
+[project.urls]
+Documentation = "https://github.com/gene-git/kea_config/Docs"
+Issues = "https://github.com/gene-git/kea_config/issues"
+Source = "https://github.com/gene-git/kea_config"
+
+[tool.uv.build-backend]
+module-name = 'kea_config_mod'
+module-root = "src"
+source-include = [
+    '/kea_config_mod',
+    '/kea_config_mod/py.typed',
 ]
-
-[tool.hatch.version]
-path = "src/kea_config/__about__.py"
-
-[[tool.hatch.envs.all.matrix]]
-python = ["3.13", "3.14", "3.15"]
+source-exclude = [
+    ".pytest_cache",
+    "__pycache__",
+    ".mypy_cache",
+]
 
 [tool.mypy]
 check_untyped_defs = true

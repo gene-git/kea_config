@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# SPDX-License-Identifier: MIT
+# SPDX-License-Identifier: GPL-2.0-or-later
 # SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
 """
 kea config generator tool
@@ -40,7 +40,7 @@ Usage:
    systemctl restart kea-dhcp4
 """
 # pylint: disable=invalid-name
-from kea import KeaConfig
+from kea_config_mod.kea import KeaConfig
 
 
 def main():

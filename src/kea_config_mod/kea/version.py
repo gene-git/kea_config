@@ -1,6 +1,6 @@
-# SPDX-License-Identifier: MIT
+# SPDX-License-Identifier: GPL-2.0-or-later
 # SPDX-FileCopyrightText: © 2023-present  Gene C <arch@sapience.com>
 """
 Project kea-config
 """
-__version__ = "5.0.1"
+__version__ = "5.2.0"

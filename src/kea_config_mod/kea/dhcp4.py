@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: MIT
+# SPDX-License-Identifier: GPL-2.0-or-later
 # SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
 """
  Support for dhcp4 part of kea config generator
@@ -37,6 +37,14 @@ def dhcp4_write_global_options(conf: KeaConfigData,
     for stype in conf.server_types:
         fob = fobs[stype]
         if fob:
+            # can be:
+            # "hw-address", "duid", "circuit-id", "client-id", "flex-id"
+            #
+            fob.write('\n')
+            fob.write('\t"host-reservation-identifiers": [\n')
+            fob.write('\t\t"hw-address"\n')
+            fob.write('\t],')
+
             fob.write('\n')
             fob.write('\t"option-data" : [\n')
             if domain_name_servers:

@@ -9,7 +9,7 @@
 project = "kea_config"
 copyright = '2023, Gene C'
 author = 'Gene C'
-release = '5.0.1'
+release = "5.2.0"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -18,8 +18,7 @@ release = '5.0.1'
 extensions = []
 
 templates_path = ['_templates']
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
-
+exclude_patterns = ['_build', 'Thumbs.db', 'Misc/*.rst', 'Changelog.rst']
 
 
 # -- Options for HTML output -------------------------------------------------
