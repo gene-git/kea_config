@@ -1,9 +1,13 @@
 -------------------------------------------------------
  Changelog    : kea_config
- Tags         : 4.15.0 ➙ 5.2.0
-              : 2025-03-27 ➙ 2026-01-04
+ Tags         : 4.16.0 ➙ 5.2.1
+              : 2025-05-29 ➙ 2026-01-04
               : 6 tags. See Docs for full changelog
 -------------------------------------------------------
+
+ 2026-01-04   : 5.2.1
+              - Update arch PKGBUILD
+              - update Docs/Changelog
 
  2026-01-04   : 5.2.0
               - ** 5.2.0**
@@ -32,9 +36,4 @@
               - Make default socket_dir "/var/run/kea". Linux FHS recommends "/run".
                   "/var/run" is typically a legacy compatibility symlink. Unclear why kea us requiring legacy paths
  2025-03-27   ⋯
-              - update Docs/Changelog.rst Docs/kea_config.pdf
-
- 2025-03-27   : 4.15.0
-              - option-data routers can be single IP or list of IPs
- 2025-03-23   ⋯
               - update Docs/Changelog.rst Docs/kea_config.pdf
