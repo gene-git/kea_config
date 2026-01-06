@@ -1,6 +1,6 @@
 #!/bin/bash
-# SPDX-License-Identifier: MIT
-# Copyright (c) 2022,2023 Gene C
+# SPDX-License-Identifier: GPL-2.0-or-later
+# Copyright (c) 2022-present Gene C <arch@sapience.com>
 # 
 # installer script for kea_config
 #  e.g. Call from PKGBUILD:  
