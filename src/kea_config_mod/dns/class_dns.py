@@ -62,7 +62,7 @@ class Dns:
               query: str,
               rr_type: str = 'A',
               one_rr: bool = True
-              ) -> str | list[str]:
+              ) -> list[str]:
         """
         Used cached dns servers to perform dns query
             rr_type : 'A", 'PTR'
@@ -71,11 +71,10 @@ class Dns:
         then list of all records are returned.
         """
         rrs: list[str] = []
-        rr: str = ''
 
         resolver = self.resolver
         if not resolver or not query:
-            return rr if one_rr else rrs
+            return rrs
 
         try:
             if rr_type == 'PTR':
@@ -84,7 +83,7 @@ class Dns:
                 res = self.resolver.resolve(query, rr_type)
 
         except dns.exception.DNSException:
-            return rr if one_rr else rrs
+            return rrs
 
         for rdata in res:
             rec_str = rdata.to_text()
@@ -92,9 +91,8 @@ class Dns:
                 rrs.append(rec_str)
 
         if one_rr:
-            if rrs and len(rrs) > 0:
-                rr = rrs[0]
-            return rr
+            if rrs and len(rrs) > 1:
+                rrs = rrs[0:1]
         return rrs
 
     def __getattr__(self, name: str) -> Any:

@@ -12,7 +12,7 @@ dest="$1"
 self="kea_config"
 mod="kea_config_mod"
 
-info="README.rst Docs configs packaging"
+info="README.rst Docs examples packaging"
 infodir="/usr/share/${self}"
 
 license_src="Docs/License/License.rst"

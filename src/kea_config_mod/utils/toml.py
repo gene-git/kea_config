@@ -3,13 +3,12 @@
 """
 toml support
 """
-# pylint: disable=
 from typing import (Any)
 import os
 import tomllib as toml
 
 
-def read_toml_file(fpath: str):
+def read_toml_file(fpath: str) -> dict[str, Any]:
     """
     read toml file and return a dictionary
     """
@@ -20,5 +19,8 @@ def read_toml_file(fpath: str):
     if os.path.exists(fpath):
         with open(fpath, 'r', encoding='utf=8') as fob:
             data = fob.read()
-            this_dict = toml.loads(data)
+            try:
+                this_dict = toml.loads(data)
+            except toml.TOMLDecodeError:
+                this_dict = {}
     return this_dict

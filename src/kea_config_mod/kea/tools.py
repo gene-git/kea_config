@@ -3,7 +3,6 @@
 """
 Support tools for kea configurator
 """
-from typing import IO
 
 
 def list_to_strings(vec: list[str]) -> str:
@@ -25,17 +24,3 @@ def list_to_strings(vec: list[str]) -> str:
 
     strings = '"' + strings + '"'
     return strings
-
-
-def open_file(path: str, mode: str) -> IO | None:
-    """
-    Open a file and return file object
-    """
-    # pylint: disable=unspecified-encoding, consider-using-with
-    try:
-        fob = open(path, mode)
-        return fob
-
-    except OSError as err:
-        print(f'Error opening file {path} : {err}')
-        return None

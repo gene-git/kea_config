@@ -3,75 +3,80 @@
 """
 Write kea dhcp4 configs
 """
+import os
+
+from kea_config_mod.data import KeaData
+from kea_config_mod.utils import open_file
+from kea_config_mod.utils import os_move
 
 from .agent import write_ctrl_agent
-from .dhcp4 import dhcp4_write_top_section
-from .dhcp4 import dhcp4_write_hooks_libs
-from .dhcp4 import dhcp4_write_global_options
-from .dhcp4 import dhcp4_write_subnets
-from .dhcp4 import dhcp4_write_reserved
-from .dhcp4 import dhcp4_write_loggers
-from .kea_data import KeaConfigData
-from .tools import open_file
-
-from .kea_types import FobConf
+from .dhcp4 import dhcp4_write
 
 
-def _open_output_files(conf: KeaConfigData) -> tuple[FobConf, FobConf]:
+def _open_output_files(data: KeaData) -> bool:
     """
     Open the kea config files for writing
+    Make 1 backup into Prev subdirectory.
     """
-    conf_base = conf.conf_base
-    agent_base = conf.agent_base
+    conf_base = data.conf_base
+    agent_base = data.agent_base
+    conf_dir_bakup = data.conf_dir_bakup
 
-    fob_conf: FobConf = {}
-    fob_agent: FobConf = {}
-
-    for stype in conf.server_types:
-        fob_conf[stype] = None
-        fob_agent[stype] = None
-
+    for (stype, server) in data.servers.items():
+        if not server.active:
+            continue
+        #
+        # kea-dhcp4
+        # - backup old and open new
+        #
         fname = f'{conf_base}-{stype}.conf'
-        fob_conf[stype] = open_file(fname, 'w')
 
+        if os.path.isfile(fname) and not os_move(fname, conf_dir_bakup):
+            print(f'Error making backup of {fname} in {conf_dir_bakup}')
+            return False
+
+        server.fob_dhcp4 = open_file(fname, 'w')
+        if not server.fob_dhcp4:
+            print(f'Error opening file {fname}')
+            return False
+        #
+        # kea-ctrl-agent
+        # - backup old and open new
+        #
         fname = f'{agent_base}-{stype}.conf'
-        fob_agent[stype] = open_file(fname, 'w')
 
-    return (fob_conf, fob_agent)
+        if os.path.isfile(fname) and not os_move(fname, conf_dir_bakup):
+            print(f'Error making backup of {fname} in {conf_dir_bakup}')
+            return False
+
+        server.fob_agent = open_file(fname, 'w')
+        if not server.fob_agent:
+            print(f'Error opening file {fname}')
+            return False
+
+    return True
 
 
-def _close_output_files(fob_conf: FobConf):
+def _close_output_files(data: KeaData):
     """
-    Close the file object.
+    Close the file objects.
     """
-    if not fob_conf:
-        return
-
-    for (_stype, fob) in fob_conf.items():
-        if fob:
-            fob.close()
+    for (_stype, server) in data.servers.items():
+        server.close_files()
 
 
-def write_configs(conf: KeaConfigData):
+def write_configs(data: KeaData) -> bool:
     """
     Write out all config sections
     """
-    (fob_conf, fob_agent) = _open_output_files(conf)
+    if not _open_output_files(data):
+        return False
 
     #
-    # Write the dhcp4 configs
+    # Write the dhcp4 and control agent configs
     #
-    dhcp4_write_top_section(conf, fob_conf)
-    dhcp4_write_hooks_libs(conf, fob_conf)
-    dhcp4_write_global_options(conf, fob_conf)
-    dhcp4_write_subnets(conf,  fob_conf)
-    dhcp4_write_reserved(conf, fob_conf)
-    dhcp4_write_loggers(conf, fob_conf)
+    dhcp4_write(data)
+    write_ctrl_agent(data)
 
-    #
-    # Write the control agent configs
-    #
-    write_ctrl_agent(conf, fob_agent)
-
-    _close_output_files(fob_conf)
-    _close_output_files(fob_agent)
+    _close_output_files(data)
+    return True

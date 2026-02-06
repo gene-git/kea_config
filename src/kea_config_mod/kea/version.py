@@ -3,4 +3,12 @@
 """
 Project kea-config
 """
-__version__ = "5.2.2"
+__version__ = "6.1.0"
+__date__ = "2026-02-06"
+__reldev__ = "release"
+
+
+def version() -> str:
+    """ report version and release date """
+    vers = f'wg-client: version {__version__} ({__reldev__}, {__date__})'
+    return vers
