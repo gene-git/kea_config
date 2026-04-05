@@ -55,7 +55,7 @@ class KeaData:
         self.dns: Dns = Dns()
         self.now: str = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.config_file: str = 'kea-dhcp4-setup.yaml'
-        self.socket_dir: str = '/var/run/kea'
+        self.socket_dir: str = '/run/kea'
         # self.net: dict[str, Any] = {}
 
         self.global_options: OptionData = OptionData()

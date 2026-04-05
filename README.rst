@@ -58,6 +58,17 @@ to verify the git tag.  You can also manually verify the signature
 Latest Changes
 ==============
 
+**Version 6.2.0**
+
+* Default socket directory is now */run/kea*
+  As shown in the example config files, can be changed:
+
+  title: xxx
+  conf_dir: xxx
+  socket_dir: /run/kea
+
+  config files over-ride the default value.
+
 **Version 6.0.0**
 
 * Major Changes
@@ -66,7 +77,7 @@ Latest Changes
   backup the *kea-dhcp4* and *kea-ctrl-agent* config files (these are 
   the output of the *kea-config* tool) before running the new version.
 
-  *kea-config* does keeps 1 backup copy of previous runs outputs as well.
+  *kea-config* does keeps 1 backup copy of previous outputs as well.
 
 * New dependency *python-ruamel-yaml*
 * Add support for multiple network interfaces with separate subnets.
@@ -343,9 +354,9 @@ Dependencies
 
 * Run time
 
- * python       
- * dnspython       
- * ruamel-yaml       
+  * python       
+  * dnspython       
+  * ruamel-yaml       
 
 * Building Package:
 
