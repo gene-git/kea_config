@@ -60,10 +60,10 @@ def dhcp4_write_top_section(data: KeaData):
         fob.write('\t},\n')
 
         fob.write('\n')
-        fob.write('\t"control-socket": {\n')
+        fob.write('\t"control-sockets": [{\n')
         fob.write('\t\t"socket-type": "unix",\n')
         fob.write(f'\t\t"socket-name": "{socket_dir}/kea4-ctrl-socket"\n')
-        fob.write('\t},\n')
+        fob.write('\t}],\n')
 
         fob.write('\t"lease-database": {\n')
         fob.write('\t\t"type": "memfile",\n')

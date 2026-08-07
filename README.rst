@@ -58,56 +58,13 @@ to verify the git tag.  You can also manually verify the signature
 Latest Changes
 ==============
 
-**Version 6.2.0**
+**6.4.0**
 
-* Default socket directory is now */run/kea*
-  As shown in the example config files, can be changed:
+* Update to track newer versions of *kea* 
+  
+  *control-socket* was changed to *control-sockets* and now holds a list.
 
-  title: xxx
-  conf_dir: xxx
-  socket_dir: /run/kea
-
-  config files over-ride the default value.
-
-**Version 6.0.0**
-
-* Major Changes
-
-  Our testing has not uncovered any issues, but it is always sensible to 
-  backup the *kea-dhcp4* and *kea-ctrl-agent* config files (these are 
-  the output of the *kea-config* tool) before running the new version.
-
-  *kea-config* does keeps 1 backup copy of previous outputs as well.
-
-* New dependency *python-ruamel-yaml*
-* Add support for multiple network interfaces with separate subnets.
-   
-  The server section *interface* is replaced by *interfaces* that is now a list
-  of pairs, (interface, subnet).  Note that even if the primary server supports 
-  more than 1 interface/subnet, multiples are optional for standby and backup.
-
-* Configuration file has been changed from TOML to YAML format.
-
-  Existing config files will be auto converted to the new format. Comments will be lost
-  unfortunately, so you may want to edit the file.
-
-  Example configs have been updated using the new format (the previous one are there too).
-  One example illustrates a server offering IPs for 2 different subnets, with each 
-  subnet associated with it's own network interface.
-
-* Code simplification and rewrite. Remove dynamic created classes and replace with 
-  clearly defined classes. More robust (if less cool). Re-organize the code to 
-  keep it more maintainable.
-
-* Config variables removed.
-
-  - *server_types*
-
-    Each server is enabled using in the server section using *active: true* or disabled with *active: false*
-
-* Backup of current kea configuration files.
-
-  - Keeps a backup copy of each output kea file under "Prev" subdirectory.
+* Add .nvchecker.toml file
 
 Using kea-config 
 ================

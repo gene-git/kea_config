@@ -6,12 +6,29 @@ Tags
 
 .. code-block:: text
 
-	4.3.0 (2022-11-05) -> 6.3.0 (2026-04-05)
-	63 commits.
+	4.3.0 (2022-11-05) -> 6.4.0 (2026-08-07)
+	65 commits.
 
 Commits
 =======
 
+
+* 2026-08-07  : **6.4.0**
+
+.. code-block:: text
+
+              - **6.4.0**
+            
+                * Update to track newer versions of *kea*
+            
+                  *control-socket* was changed to *control-sockets* and now holds a list.
+            
+                * Add .nvchecker.toml file
+ 2026-04-05   ⋯
+
+.. code-block:: text
+
+              - update Docs/Changelog
 
 * 2026-04-05  : **6.3.0**
 
