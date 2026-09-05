@@ -58,10 +58,10 @@ to verify the git tag.  You can also manually verify the signature
 Latest Changes
 ==============
 
-**6.5.0**
+**6.5.1**
 
 * switch to meson/meson-python for build/package management
-* add pytest checks.
+* add pytest checks and checkdepends on pytest
 
 Using kea-config 
 ================
