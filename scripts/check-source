@@ -9,11 +9,23 @@
 # - mypy
 
 # code
-mod_dir="kea_config_mod"
-cd ./src
-PYTHONPATH=. pylint $mod_dir/*y $mod_dir/*/*py
-PYTHONPATH=. pycodestyle --max-line-length=110 $mod_dir/*y $mod_dir/*/*py
+mod_dir="src/kea_config_mod"
 
+export PYTHONPATH=./src
+
+echo ""
+echo "  ... pylint"
+echo ""
+pylint $mod_dir/*y $mod_dir/*/*py
+
+echo ""
+echo "  ... pycodfestyle"
+echo ""
+pycodestyle --max-line-length=110 $mod_dir/*y $mod_dir/*/*py
+
+echo ""
+echo "  ... mypy"
+echo ""
 mypy --check-untyped-defs --follow-untyped-imports $mod_dir
 
 

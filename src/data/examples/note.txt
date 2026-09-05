@@ -1,0 +1,33 @@
+#
+# NB - Since the hostnames and IP addresses are fake, 
+# running on the examples will work but will lead to some warnings and dummy values
+# Output will be generated.
+#
+
+Example 1
+--------
+
+    - dhcp4-example-1.conf
+      version 5.x example 1 - can be run and new yaml config will be generated
+
+      Run it:
+        kea-config -c dhcp4-example-1.conf
+
+    - dhcp4-example-1.yaml
+      Automatically generated YAML file created from dhcp4-example.conf.
+
+    - Example-1
+      The output files.
+
+Example 2
+--------
+
+    - dhcp4-example-2.yaml
+      New sample with primary supporting 2 network interfaces with their own subnets
+      and offering DHCP separately on each interface.
+
+      Run it :
+        kea-config -c dhcp4-example-2.yaml
+
+    - Example-2
+      output files for example 2

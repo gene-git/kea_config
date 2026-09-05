@@ -1,0 +1,76 @@
+---
+title: Example 1 Config
+conf_dir: Example-1
+ctrl_agent_port: '8762'
+socket_dir: /run/kea
+global_options:
+  domain_name_servers:
+    - 10.1.0.10
+    - 10.1.0.11
+    - 10.1.0.12
+  domain_name: sub1.example.com
+  domain_search:
+    - sub1.example.com
+    - foo.com
+  ntp_servers:
+    - 10.1.0.10
+    - 10.1.0.14
+  min_valid_lifetime: 14400
+  valid_lifetime: 28800
+  max_valid_lifetime: 57600
+servers:
+  primary:
+    hostname: server1.sub1.example.com
+    port: '8761'
+    auth_user: kea-ctrl
+    auth_password: xxxSecretHotSauce
+    stype: primary
+    subdomain: sub1.example.com
+    active: true
+    interfaces:
+      -
+        - eno1
+        - 10.1.0.0/24
+  standby:
+    hostname: server2.sub1.example.com
+    port: '8761'
+    auth_user: kea-ctrl
+    auth_password: xxxSecretHotSauce
+    stype: standby
+    subdomain: sub1.example.com
+    active: true
+    interfaces:
+      -
+        - enp3s0
+        - 10.1.0.0/24
+  backup:
+    hostname: server3.sub1.example.com
+    port: '8761'
+    auth_user: kea-ctrl
+    auth_password: xxxSecretHotSauce
+    stype: backup
+    subdomain: sub1.example.com
+    active: true
+    interfaces:
+      -
+        - eno1
+        - 10.1.0.0/24
+nets:
+  10.1.0.0/24:
+    pools:
+      - 10.1.0.193 - 10.1.0.250
+    subnet: 10.1.0.0/24
+    option_data:
+      broadcast_address: 10.1.0.255
+      routers: 10.1.0.1
+      ntp_servers:
+        - 10.1.0.10
+        - 10.1.0.14
+    reserved:
+      ap0:
+        hw_address: cc:aa:aa:aa:aa:01
+      bob_laptop:
+        hw_address: cc:aa:aa:aa:aa:02
+      web_serv1:
+        hw_address: cc:aa:aa:aa:aa:03
+    subdomain: sub1.example.com

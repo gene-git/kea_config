@@ -1,0 +1,109 @@
+---
+#
+# This example has 2 networks and primary server has 2 interfaces each with its own subnet.
+# standby and backup support 1 network (easy to add the second)
+#
+# network_1:
+#   sub1.example.com
+#   10.1.0.0/24
+# network_2:
+#   sub2.example.com
+#   10.2.0.0/24
+#
+title: Example Config 2
+conf_dir: Example-2
+ctrl_agent_port: '8762'
+socket_dir: /run/kea
+global_options:
+  domain_name_servers:
+    - 10.1.0.10
+    - 10.1.0.11
+    - 10.2.0.10
+  domain_name: sub1.example.com
+  domain_search:
+    - sub1.example.com
+    - example.com
+  ntp_servers:
+    - 10.1.0.10
+    - 10.1.0.14
+  min_valid_lifetime: 14400
+  valid_lifetime: 28800
+  max_valid_lifetime: 57600
+servers:
+  primary:
+    hostname: serv1.sub1.example.com
+    port: '8761'
+    auth_user: kea-ctrl
+    auth_password: xxxSecretHotSauce
+    stype: primary
+    subdomain: sub1.example.com
+    active: true
+    interfaces:
+      -
+        - eno1
+        - 10.1.0.0/24
+      -
+        - eno2
+        - 10.2.0.0/24
+  standby:
+    hostname: serv2.sub1.example.com
+    port: '8761'
+    auth_user: kea-ctrl
+    auth_password: xxxSecretHotSauce
+    stype: standby
+    subdomain: sub1.example.com
+    active: true
+    interfaces:
+      -
+        - enp3s0
+        - 10.1.0.0/24
+  backup:
+    hostname: serv3.sub1.example.com
+    port: '8761'
+    auth_user: kea-ctrl
+    auth_password: xxxSecretHotSauce
+    stype: backup
+    subdomain: sub1.example.com
+    active: true
+    interfaces:
+      -
+        - eno1
+        - 10.1.0.0/24
+nets:
+  10.1.0.0/24:
+    pools:
+      - 10.1.0.80 - 10.1.0.90
+      - 10.1.0.193 - 10.1.0.250
+    subnet: 10.1.0.0/24
+    option_data:
+      broadcast_address: 10.1.0.255
+      routers: 10.1.0.1
+      ntp_servers:
+        - 10.1.0.10
+        - 10.1.0.14
+    reserved:
+      ap0:
+        hw_address: cc:aa:aa:aa:aa:01
+      ap1:
+        hw_address: cc:aa:aa:aa:aa:02
+      ap2:
+        hw_address: cc:aa:aa:aa:aa:03
+    subdomain: sub1.example.com
+  10.2.0.0/24:
+    pools:
+      - 10.2.0.224 - 10.2.0.40
+    subnet: 10.2.0.0/24
+    option_data:
+      broadcast_address: 10.2.0.255
+      routers: 10.2.0.1
+      ntp_servers:
+        - 10.1.0.10
+        - 10.1.0.14
+    reserved:
+      crest1:
+        hw_address: cc:aa:aa:aa:aa:01
+      sonos1:
+        hw_address: cc:aa:aa:aa:aa:02
+      ap0:
+        hw_address: cc:aa:aa:aa:aa:03
+    subdomain: sub2.example.com

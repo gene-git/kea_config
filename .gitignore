@@ -1,0 +1,7 @@
+__pycache__/
+.mypy_cache
+build/
+src/data/docs/_build/
+src/tests/Example-1
+src/tests/Example-2
+

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>1. kea-config &#8212; kea-config 6.5.0
+ documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=7f64e455"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="2. Appendix" href="Appendix.html" />
+    <link rel="prev" title="kea-config documentation" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="kea-config">
+<h1><span class="section-number">1. </span>kea-config<a class="headerlink" href="#kea-config" title="Link to this heading">¶</a></h1>
+<section id="overview">
+<h2><span class="section-number">1.1. </span>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
+<p><strong>What is kea?</strong></p>
+<p>kea is a modern dhcp server from <a class="reference external" href="https://www.isc.org/kea">ISC</a> which supercedes their older
+dhcp software.</p>
+<p>kea offers a nice feature set including the ability to have a hot standby to pick up
+in case the primary is unavailable.</p>
+<p>However, it’s power lurks behind a complicated configuration suite that, at least for me, is not
+terribly human friendly.</p>
+<p>Perhaps most notable is that each of the servers requires it’s own separate configuration and
+keeping them all synchronized can be a bit of a chore and naturally is prone to human error
+unless a tool is used to ensure each server config is consistent.</p>
+<p><strong>What is kea-config?</strong></p>
+<p>kea-config provides the tool that has a single configuration input file from which
+it generates the native kea configuration files.</p>
+<p>By using a single configuration we guarantee that the configs kea needs
+for the primary, standby and backup servers are always consistent with one other.</p>
+<p><em>kea-config</em> also has the convenience of doing DNS lookups for any host reservations, meaning
+the IP host reservations are specified by hostname and the IP, from DNS lookup,
+is then output for <em>kea-dhcp4</em> to use..</p>
+<p><em>kea-config</em> supports <strong>kea-dhcp4</strong> and its companion control agent.</p>
+<p>Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#overview">Overview</a></p></li>
+<li><p><a class="reference internal" href="#latest-changes">Latest Changes</a></p></li>
+<li><p><a class="reference internal" href="#using-kea-config">Using kea-config</a></p></li>
+<li><p><a class="reference internal" href="#configuration">Configuration</a></p></li>
+<li><p><a class="reference internal" href="Appendix.html#the-appendix"><span class="std std-ref">Appendix</span></a></p></li>
+</ul>
+<p>Please Note:</p>
+<p>An Archlinux package can be built using the PKGBUILD from the packaging directory or from the AUR.
+All git tags are signed with <a class="reference external" href="mailto:arch&#37;&#52;&#48;sapience&#46;com">arch<span>&#64;</span>sapience<span>&#46;</span>com</a> key which is available via WKD
+or download from <a class="reference external" href="https://www.sapience.com/tech">sapience website</a>.
+Add the key to your package builder gpg keyring.
+The key is included in the Arch package and the source= line with <em>?signed</em> at the end can be used
+to verify the git tag.  You can also manually verify the signature</p>
+</section>
+<section id="latest-changes">
+<h2><span class="section-number">1.2. </span>Latest Changes<a class="headerlink" href="#latest-changes" title="Link to this heading">¶</a></h2>
+<p><strong>6.5.0</strong></p>
+<ul class="simple">
+<li><p>switch to meson/meson-python for build/package management</p></li>
+<li><p>add pytest checks.</p></li>
+</ul>
+</section>
+<section id="using-kea-config">
+<h2><span class="section-number">1.3. </span>Using kea-config<a class="headerlink" href="#using-kea-config" title="Link to this heading">¶</a></h2>
+<p>kea-config depends on python, dnspython and ruamel-yaml.</p>
+<p>To use it after installation,  copy a sample config file from the <em>examples</em> dir and modify
+appropriately for your use case. When ready run it to generate the set of
+input files for <em>kea</em> to use:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kea-config<span class="w"> </span>-c<span class="w"> </span>&lt;your-config.yaml&gt;
+</pre></div>
+</div>
+<p>It can also be run from the git source repo:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">PYTHONPATH</span><span class="o">=</span>src<span class="w"> </span>src/kea_config_mod/apps/kea-config.py<span class="w"> </span>-c<span class="w"> </span>&lt;your-config.yaml&gt;
+</pre></div>
+</div>
+<p>The yaml config also specifes the directory where the outputs are to be written.</p>
+<p>For each (active) server section (primary, standby and backup), it creates one configuration
+file to for use by <em>kea-dhcp4</em> and one for <em>kea-ctrl-agent</em> (the control agent).</p>
+<p>The <em>primary</em> server must be provided in the input config file,
+while <em>standby</em> and <em>backup</em> servers are optional.</p>
+<p>For example, the resulting kea configs for the primary server will be written to
+the directory specified by <em>conf_dir</em>:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>kea-ctrl-agent-primary.conf
+kea-dhcp4-primary.conf
+</pre></div>
+</div>
+<p>Similarly for standby and/or backup servers if so requested. Each pair of files is to be used
+on the corresponding server. e.g The 2 primary files are for use on the <em>kea-dhcp4</em> primary server.</p>
+<p>One simple way to manage these is to copy the entire <em>conf_dir</em> to each server /etc/kea/
+and use symlinks /etc/kea/ poinging to appropriate primary, standby or backup config.</p>
+<p>e.g. /etc/kea on primary could have:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>kea-dhcp4.conf -&gt; &lt;conf_dir&gt;/kea-dhcp4-primary.conf
+kea-ctrl-agent.conf -&gt; &lt;conf_dir&gt;/kea-ctrl-agent-primary.conf
+</pre></div>
+</div>
+<p>Note that if the input config, <em>xxx.conf</em>, passed to</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>kea-congig -c xxx.conf
+</pre></div>
+</div>
+<p>is a pre-6.0 (<em>.conf</em>) file,
+then a <em>xxx.yaml</em> version will be written in the same directory.</p>
+<p>The yaml file should be used thereafter. You may want to
+check it and/or add comments. Uunfortunately any comments in the old config will
+be lost in the automatic conversion to yaml (my apologies).</p>
+<section id="configuration">
+<h3><span class="section-number">1.3.1. </span>Configuration<a class="headerlink" href="#configuration" title="Link to this heading">¶</a></h3>
+<p>Config files are in YAML. Earlier versions used TOML. As mentioned above, version 6.0
+of <em>kea-config</em> will automatically convert these to the new yaml format.</p>
+<p>In yaml, comments begin with ‘#’ and can be at for an entire line or part of a line.</p>
+<p>Two example config files are provided in the <em>examples</em> directory and make a
+good starting template.
+The installer script puts these into <em>/usr/share/kea_config/examples</em>.</p>
+<p>One of the examples has a primary server serving DHCP over a single
+network interface. It includes a high availibility standby server as well as
+a backup server.</p>
+<p>The second example expands on the first one, and introduces a second subnet that is on a
+a separate netowrk interface. This offers IPs out of pools belonging to the second subnet.</p>
+<p>Each server configuration must have an <em>interfaces:</em> varieble that is a list of
+<em>(interface, subnet)</em> pairs. That server is then able to offer DHCP for each subnet
+over it’s companion interface.</p>
+<p>While the primary server is distinctive in being required, any server may provide
+2 (or more) subnets. In the example, the primary server has 2 subnets.</p>
+<p>For testing purposes, it can be useful to run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kea-dhcp4<span class="w"> </span>-t<span class="w"> </span>kea-dhcp4-xxx
+<span class="c1"># or</span>
+kea-dhcp4<span class="w"> </span>-T<span class="w"> </span>kea-dhcp4-xxx
+</pre></div>
+</div>
+<p>using the corresponding output <em>kea-dhcp4-xxx</em> file for the server the test is run on.
+Since <em>kea-dhcp4</em> validates not only the syntax, but also subnets and network
+interfaces, this test must be run on the actual server.</p>
+<p>Please see the examples for full details. Below is a summary of the main
+parts of the <em>kea-config</em> input file.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>---
+# config snippet
+ title: Example 1 Config
+ conf_dir: Example-1
+ ctrl_agent_port: '8762'
+ socket_dir: /var/run/kea
+ global_options:
+   domain_name_servers:
+     - 10.1.0.10
+     - 10.1.0.11
+     - 10.1.0.12
+   domain_name: sub1.example.com
+   domain_search:
+     - sub1.example.com
+     - foo.com
+   ntp_servers:
+     - 10.1.0.10
+     - 10.1.0.14
+   min_valid_lifetime: 14400
+   valid_lifetime: 28800
+   max_valid_lifetime: 57600
+ servers:
+   primary:
+     hostname: server1.sub1.example.com
+     port: '8761'
+     auth_user: kea-ctrl
+     auth_password: xxxSecretHotSauce
+     stype: primary
+     subdomain: sub1.example.com
+     active: true
+     interfaces:
+       -
+         - eno1
+         - 10.1.0.0/24
+   standby:
+     hostname: server2.sub1.example.com
+     ...
+
+   backup:
+     hostname: server3.sub1.example.com
+     ...
+
+ nets:
+   // first subnet
+   10.1.0.0/24:
+     pools:
+       - 10.1.0.72 - 10.1.0.95
+       - 10.1.0.193 - 10.1.0.250
+     subnet: 10.1.0.0/24
+     option_data:
+       broadcast_address: 10.1.0.255
+       routers: 10.1.0.1
+       ntp_servers:
+         - 10.1.0.10
+         - 10.1.0.14
+     reserved:
+       ap0:
+         hw_address: cc:aa:aa:aa:aa:01
+       bob_laptop:
+         hw_address: cc:aa:aa:aa:aa:02
+       web_serv1:
+         hw_address: cc:aa:aa:aa:aa:03
+     subdomain: sub1.example.com
+   // second subnet
+   10.2.0.0/24:
+     ...
+</pre></div>
+</div>
+<p>It should be pretty self-exaplanatory.</p>
+<ul>
+<li><p><em>title:</em></p>
+<p>For human use only - not used by kea-config.</p>
+</li>
+<li><p><em>conf_dir:</em></p>
+<p>Directory where generated kea configs reside. What I do is rsync this directory to
+/etc/kea/ on each kea server. Each server then has a soft link to its own specific config.
+For example on my primary server I have</p>
+</li>
+<li><p><em>global_options:</em></p>
+<p>This section provides common dhcp information to be shared with dhcp clients:
+It is generally better for each <em>net</em> section to have it’s own.</p>
+</li>
+<li><p><em>servers:</em></p>
+<p>Provides the information needed for the each server. Primary is required
+while standby and backare are optional.
+Having a standby server is strongly recommended for high availibility.</p>
+</li>
+<li><p><em>nets</em></p>
+<p>This section describes one or more networks to offer DHCP. Each section has
+the subnet, sub-domain, pool of IP addresses and so on for that network.</p>
+<p>Any server offering a network, must have that subnet on one of it’s network interfaces
+and every interface it will serve DHCP on, must be listed in the server’s interface section.</p>
+<p>Each subnet has it’s own list of IP host resevations which are proivided by short form
+<em>hostname</em> and it’s MAC (hardware) address. Local DNS is used to lookup each host’s
+IP address from it’s hostname. Please be sure that any host in the reservation list
+can have it’s IP retrieved via DNS</p>
+</li>
+</ul>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">kea-config</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">dns-tools Manual</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">1. kea-config</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview">1.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#latest-changes">1.2. Latest Changes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-kea-config">1.3. Using kea-config</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Appendix.html">2. Appendix</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">kea-config documentation</a></li>
+      <li>Next: <a href="Appendix.html" title="next chapter"><span class="section-number">2. </span>Appendix</a></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2022-presennt, Gene C.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.1.0</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/README.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
