@@ -6,20 +6,28 @@ Tags
 
 .. code-block:: text
 
-	4.3.0 (2022-11-05) -> HEAD (2026-09-05)
-	67 commits.
+	4.3.0 (2022-11-05) -> 6.6.0 (2026-09-06)
+	68 commits.
 
 Commits
 =======
 
 
-* 2026-09-05  : **HEAD**
+* 2026-09-06  : **6.6.0**
+
+.. code-block:: text
+
+              - **6.6.0**
+            
+                * FIx copy /paste error in meson.build (/usr/share/...)
+
+* 2026-09-05  : **6.5.1, origin/master**
 
 .. code-block:: text
 
               - Add checkdepends on pytest to PKGBUILD
 
-* 2026-09-05  : **6.5.0, origin/master**
+* 2026-09-05  : **6.5.0**
 
 .. code-block:: text
 

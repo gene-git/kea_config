@@ -1,4 +1,4 @@
-.. dns_tools
+.. kea_config
 
 kea-config documentation
 ========================

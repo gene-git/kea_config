@@ -65,25 +65,25 @@ s_scripts = 'src/scripts'
 manual = 'kea-config.pdf'
 
 # 
-# /usr/share/dns_tools/docs
+# /usr/share/kea_config/docs
 # 
 install_data(
   [
     s_docs / manual,
   ],
-  install_dir: d_share / 'dns_tools/docs'
+  install_dir: d_share / 'kea_config/docs'
 )
 
 install_subdir(
   [
     s_docs / 'html',
   ],
-  install_dir: d_share / 'dns_tools/docs',
+  install_dir: d_share / 'kea_config/docs',
   strip_directory: false
 )
 
 # 
-# /usr/share/dns_tools 
+# /usr/share/kea_config 
 # 
 install_data(
   [
@@ -91,7 +91,7 @@ install_data(
     s_changelog / 'Changelog.rst',
     'packaging/Changelog',
   ],
-  install_dir: d_share / 'dns_tools'
+  install_dir: d_share / 'kea_config'
 )
 install_data(
   [
@@ -99,17 +99,17 @@ install_data(
     s_examples / 'dhcp4-example-2.yaml',
     s_examples / 'note.txt',
     ],
-  install_dir: d_share / 'dns_tools/examples',
+  install_dir: d_share / 'kea_config/examples',
 )
 
 # 
-# /usr/share/licenses/dns_tools 
+# /usr/share/licenses/kea_config 
 # 
 install_data(
   [
     s_license / 'License-gpl-2.0.txt',
     s_license / 'License.rst',
   ],
-  install_dir: d_share / 'licenses/dns_tools'
+  install_dir: d_share / 'licenses/kea_config'
 )
 

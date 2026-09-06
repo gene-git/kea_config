@@ -58,6 +58,10 @@ to verify the git tag.  You can also manually verify the signature
 Latest Changes
 ==============
 
+**6.6.0**
+
+* FIx copy /paste error in meson.build (/usr/share/...)
+
 **6.5.1**
 
 * switch to meson/meson-python for build/package management
