@@ -6,14 +6,28 @@ Tags
 
 .. code-block:: text
 
-	4.3.0 (2022-11-05) -> 6.6.0 (2026-09-06)
-	68 commits.
+	4.3.0 (2022-11-05) -> 6.6.2 (2026-09-09)
+	70 commits.
 
 Commits
 =======
 
 
-* 2026-09-06  : **6.6.0**
+* 2026-09-09  : **6.6.2**
+
+.. code-block:: text
+
+              - **6.6.2**
+                * Remove unneeded sphinx tmp file from html docs
+
+* 2026-09-09  : **6.6.1**
+
+.. code-block:: text
+
+              - **6.6.1**
+                * Use meson to run the tests
+
+* 2026-09-06  : **6.6.0, origin/master**
 
 .. code-block:: text
 
@@ -21,7 +35,7 @@ Commits
             
                 * FIx copy /paste error in meson.build (/usr/share/...)
 
-* 2026-09-05  : **6.5.1, origin/master**
+* 2026-09-05  : **6.5.1**
 
 .. code-block:: text
 

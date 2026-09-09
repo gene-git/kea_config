@@ -58,9 +58,10 @@ to verify the git tag.  You can also manually verify the signature
 Latest Changes
 ==============
 
-**6.6.1**
+**6.6.2**
 
 * Use meson to run the tests
+* Remove unneeded sphinx tmp file from html docs
 
 **6.6.0**
 
