@@ -1,0 +1,122 @@
+#!/usr/bin/bash
+#
+# kea-config test runner - takes 1 arguments
+#   test-number
+# where test-number: 1 or 2
+#
+set -euo pipefail
+
+
+cleanup() {
+    local _exit_code=$?
+    if [[ -d "$tempdir" ]] ; then
+        /usr/bin/rm -rf "$tempdir"
+    fi
+    exit "$_exit_code"
+}
+trap cleanup EXIT INT TERM   
+
+testdir="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
+echo "testdir = $testdir"
+cd "$testdir"
+
+#
+# Input
+#
+if (($# < 1)) ; then
+    echo "Missing args: test-dir test-num"
+    exit 1
+fi
+
+testnum="$1"
+
+if (( testnum < 1 || testnum > 2)) ; then
+    echo "Bad test number"
+    exit 1
+fi
+
+
+if [[ -z "${PYTHONPATH:-}" ]] ; then
+    export PYTHONPATH=$(/usr/bin/realpath "$testdir"/../)
+fi
+
+appdir=$(/usr/bin/realpath "$PYTHONPATH"/kea_config_mod/apps)
+
+#
+# prep
+#
+
+tempdir="/tmp/kea-config-test-$testnum-$$"
+/usr/bin/mkdir -p "$tempdir"
+
+echo "---------------------------------"
+echo " running kea-config"
+echo "---------------------------------"
+"$appdir"/kea-config.py -c dhcp4-example-"$testnum".yaml > /dev/null
+
+echo "---------------------------------"
+echo " Check results"
+echo "---------------------------------"
+
+#
+# Helper funcs
+#
+check_one() {
+    local _file="$1"
+    /usr/bin/grep -v '^//' "$_file" > "$tempdir/A"
+    /usr/bin/grep -v '^//' Baseline/"$_file" > "$tempdir/B"
+    /usr/bin/diff "$tempdir/A" "$tempdir/B" > /dev/null 2>/dev/null
+    ret="$?"
+    echo "$ret"
+}
+
+if [[ -t 1 ]]; then
+    green() { echo -en "\e[32m$1\e[0m"; }
+    red()   { echo -en "\e[31m$1\e[0m"; }
+else
+    green() { echo -en "$1"; }
+    red()   { echo -en "$1"; }
+fi
+
+
+#
+# Tests
+#
+examples=(
+    Example-1
+    Example-2
+)
+files=(
+    kea-ctrl-agent-backup.conf
+    kea-ctrl-agent-primary.conf
+    kea-ctrl-agent-standby.conf
+    kea-dhcp4-backup.conf
+    kea-dhcp4-primary.conf
+    kea-dhcp4-standby.conf
+)
+
+num_fails=0
+#for example in "${examples[@]}"
+#do
+    example="Example-$testnum"
+
+    for file in "${files[@]}"
+    do
+        this_test="$example/$file"
+        ret=$(check_one "$this_test")
+        if (( ret ==  0 )) ; then
+            green " [OKAY]"
+            echo " Result is good: $this_test"
+        else
+            red " [FAIL]"
+            echo " Result is bad : $this_test"
+            num_fails=$((num_fails + 1)) 
+        fi
+    done
+#done
+
+if ((num_fails == 0)) ; then
+    exit 0
+else
+    exit 1
+fi

@@ -23,7 +23,7 @@ d_share = get_option('datadir')
 
 py_mod = import('python')
 py = py_mod.find_installation(pure: false)
-src_root = meson.project_source_root()
+proj_root = meson.project_source_root()
 py_dep = py.dependency(embed: true)
 
 inc_dir = []
@@ -113,3 +113,18 @@ install_data(
   install_dir: d_share / 'licenses/kea_config'
 )
 
+#
+# tests
+#
+srcdir = proj_root / 'src'
+testdir = srcdir / 'tests'
+test_exe = find_program(testdir / 'run-one-test')
+
+foreach i : range(1, 3)
+  test('test-@0@'.format(i), 
+    test_exe, 
+    args: ['@0@'.format(i)], 
+    env: {'PYTHONPATH': srcdir},
+    workdir: testdir,
+    )
+endforeach    

@@ -4,84 +4,9 @@
 #
 set -euo pipefail
 
-cleanup() {
-    local _exit_code=$?
-    if [[ -d "$tempdir" ]] ; then
-        /usr/bin/rm -rf "$tempdir"
-    fi
-    exit "$_exit_code"
-}
-#trap cleanup EXIT INT TERM   
+SCRIPT_DIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 
-tempdir="/tmp/kea-config-test-$$"
-/usr/bin/mkdir "$tempdir"
+"$SCRIPT_DIR"/run-one-test "1"
+"$SCRIPT_DIR"/run-one-test "2"
 
-export PYTHONPATH=$(/usr/bin/realpath ../)
-appdir=$(/usr/bin/realpath ../kea_config_mod/apps)
-
-echo "---------------------------------"
-echo " running kea-config"
-echo "---------------------------------"
-"$appdir"/kea-config.py -c dhcp4-example-1.yaml > /dev/null
-"$appdir"/kea-config.py -c dhcp4-example-2.yaml > /dev/null
-
-echo "---------------------------------"
-echo " Check results"
-echo "---------------------------------"
-
-
-#
-# Helper funcs
-#
-check_one() {
-    local _file="$1"
-    /usr/bin/grep -v '^//' "$_file" > "$tempdir/A"
-    /usr/bin/grep -v '^//' Baseline/"$_file" > "$tempdir/B"
-    /usr/bin/diff "$tempdir/A" "$tempdir/B" > /dev/null 2>/dev/null
-    ret="$?"
-    echo "$ret"
-}
-
-green() { echo -en "\e[32m$1\e[0m"; }
-red()   { echo -en "\e[31m$1\e[0m"; }
-
-
-#
-# Tests
-#
-examples=(
-    Example-1
-    Example-2
-)
-files=(
-    kea-ctrl-agent-backup.conf
-    kea-ctrl-agent-primary.conf
-    kea-ctrl-agent-standby.conf
-    kea-dhcp4-backup.conf
-    kea-dhcp4-primary.conf
-    kea-dhcp4-standby.conf
-)
-
-num_fails=0
-for example in "${examples[@]}"
-do
-    for file in "${files[@]}"
-    do
-        this_test="$example/$file"
-        ret=$(check_one "$this_test")
-        if (( ret ==  0 )) ; then
-            green " [OKAY]"
-            echo " Result is good: $this_test"
-        else
-            red " [FAIL]"
-            echo " Result is bad : $this_test"
-            num_fails=$((num_fails + 1)) 
-        fi
-    done
-done
-
-if ((num_fails == 0)) ; then
-    exit 0
-else
-    exit 1
-fi
+exit 0
