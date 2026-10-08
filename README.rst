@@ -39,13 +39,13 @@ is then output for *kea-dhcp4* to use..
 Contents
 
 * `Overview`_
-* `Latest Changes`_
 * `Using kea-config`_
 * `Configuration`_
 * :ref:`The Appendix`
 
 
-Please Note:
+Signed Releases
+---------------
 
 An Archlinux package can be built using the PKGBUILD from the packaging directory or from the AUR.
 All git tags are signed with arch@sapience.com key which is available via WKD
@@ -55,29 +55,12 @@ The key is included in the Arch package and the source= line with *?signed* at t
 to verify the git tag.  You can also manually verify the signature
 
 
-Latest Changes
-==============
-
-**6.6.2**
-
-* Use meson to run the tests
-* Remove unneeded sphinx tmp file from html docs
-
-**6.6.0**
-
-* FIx copy /paste error in meson.build (/usr/share/...)
-
-**6.5.1**
-
-* switch to meson/meson-python for build/package management
-* add pytest checks and checkdepends on pytest
-
 Using kea-config 
 ================
 
-kea-config depends on python, dnspython and ruamel-yaml.
+kea-config requires python, dnspython and ruamel-yaml.
 
-To use it after installation,  copy a sample config file from the *examples* dir and modify 
+After installing,  copy a sample config file from the *examples* dir and modify 
 appropriately for your use case. When ready run it to generate the set of
 input files for *kea* to use:
 
@@ -85,13 +68,7 @@ input files for *kea* to use:
 
     kea-config -c <your-config.yaml>
 
-It can also be run from the git source repo:
-
-.. code-block:: bash
-
-    PYTHONPATH=src src/kea_config_mod/apps/kea-config.py -c <your-config.yaml>
-
-The yaml config also specifes the directory where the outputs are to be written.
+The yaml config also specifes the directory where the outputs are written.
 
 For each (active) server section (primary, standby and backup), it creates one configuration 
 file to for use by *kea-dhcp4* and one for *kea-ctrl-agent* (the control agent). 
