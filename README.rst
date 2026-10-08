@@ -36,13 +36,21 @@ is then output for *kea-dhcp4* to use..
 
 *kea-config* supports **kea-dhcp4** and its companion control agent.
 
+Documentation
+-------------
+
+The manual provides detailed information and is available in both HTML and PDF formats.
+Both are installed under */usr/share/kea_config/docs*.
+
+The manual is also available at: `readthedocs <https://kea-config.readthedocs.io>`_.
+
 Contents
+--------
 
 * `Overview`_
 * `Using kea-config`_
 * `Configuration`_
 * :ref:`The Appendix`
-
 
 Signed Releases
 ---------------

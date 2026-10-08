@@ -2,6 +2,10 @@
 Recent Changes
 ==============
 
+**6.6.4**
+
+* Readme update
+
 **6.6.3**
 
 * Documentation on `readthedocs <https://kea-config.readthedocs.io>`

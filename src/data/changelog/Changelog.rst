@@ -6,20 +6,26 @@ Tags
 
 .. code-block:: text
 
-	4.3.0 (2022-11-05) -> 6.6.3 (2026-10-08)
-	71 commits.
+	4.3.0 (2022-11-05) -> 6.6.4 (2026-10-08)
+	72 commits.
 
 Commits
 =======
 
 
-* 2026-10-08  : **6.6.3**
+* 2026-10-08  : **6.6.4**
+
+.. code-block:: text
+
+              - 6.6.4 Readme update
+
+* 2026-10-08  : **6.6.3, origin/master**
 
 .. code-block:: text
 
               - 6.6.3 Documentation on `readthedocs <https://kea-config.readthedocs.io>`
 
-* 2026-09-09  : **6.6.2, origin/master**
+* 2026-09-09  : **6.6.2**
 
 .. code-block:: text
 

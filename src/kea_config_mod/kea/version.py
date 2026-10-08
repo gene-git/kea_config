@@ -3,7 +3,7 @@
 """
 Project kea-config
 """
-__version__ = "6.6.3"
+__version__ = "6.6.4"
 __date__ = "2026-10-08"
 __reldev__ = "release"
 
